@@ -9,6 +9,8 @@ import CalenderScreen from '../screen/CalenderScreen';
 import StatsScreen from '../screen/StatsScreen';
 import PremiumScreen from '../screen/PremiumScreen';
 import * as Animatable from 'react-native-animatable';
+import PremiumStackNavigator from './PremiumStackNavigator';
+import CalenderScreenNavigator from './CalenderScreenNavigator';
 
 
 const Tab = createBottomTabNavigator();
@@ -17,7 +19,7 @@ const TabArr = [
     {
         name: 'Calender',
         label: 'Calender',
-        component: CalenderScreen,
+        component: CalenderScreenNavigator,
         iconFamily: 'Ionicons',
         iconName: 'calendar-outline',
         activeIcon: 'calendar-sharp',
@@ -33,7 +35,7 @@ const TabArr = [
     {
         name: 'Premium',
         label: 'Premium',
-        component: PremiumScreen,
+        component: PremiumStackNavigator,
         iconFamily: 'MaterialCommunityIcons',
         iconName: 'police-badge-outline',
         activeIcon: 'police-badge',
@@ -88,15 +90,6 @@ const BottomNavigator = () => {
         <Tab.Navigator
             screenOptions={{
                 headerShown: false,
-                tabBarStyle: {
-                    height: 60,
-                    position: 'absolute',
-                    bottom: 16,
-                    left: 16,
-                    right: 16,
-                    borderRadius: 16,
-                    elevation: 1,
-                },
             }}
         >
             {
@@ -105,6 +98,16 @@ const BottomNavigator = () => {
                         key={uuid.v4()}
                         name={item.name}
                         options={{
+                            tabBarStyle: {
+                                height: 60,
+                                position: 'absolute',
+                                bottom: 16,
+                                left: 16,
+                                right: 16,
+                                borderRadius: 16,
+                                elevation: 1,
+                                display: item.label === 'Premium' ? 'none' : 'flex'
+                            },
                             tabBarButton: (props) => <TabButton {...props} item={item} />,
                             tabBarLabel: item.label,
                             tabBarIcon: ({ color, focused }) => <IconComponent

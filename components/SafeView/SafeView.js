@@ -1,9 +1,9 @@
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const SafeView = ({ children }) => {
+const SafeView = ({ children, style }) => {
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={{ ...styles.container, ...style }}>
             {children}
         </SafeAreaView>
     )

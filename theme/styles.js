@@ -5,6 +5,10 @@ export const colors = {
     primary: '#c62581',
     primaryLight: '#f56ab9',
     secondary: '#FF6B6B',
+    black: '#000',
+    white: '#fff',
+    darkGrey: '#929292',
+    lightGrey: '#dadada'
     // Add more color constants here
 };
 
