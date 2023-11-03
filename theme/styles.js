@@ -8,7 +8,9 @@ export const colors = {
     black: '#000',
     white: '#fff',
     darkGrey: '#929292',
-    lightGrey: '#dadada'
+    lightGrey: '#fcfcfc',
+    lightBlue: '#588cbe',
+    borderColor: '#ebebeb'
     // Add more color constants here
 };
 

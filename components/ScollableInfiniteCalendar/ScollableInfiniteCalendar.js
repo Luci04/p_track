@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Modal } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { CalendarList } from 'react-native-calendars'
 import { useNavigation } from '@react-navigation/native';
@@ -152,10 +152,13 @@ const ScollableInfiniteCalendar = () => {
             <CalendarList
                 onDayPress={onDayPress}
                 pastScrollRange={3}
-                futureScrollRange={3}
+                futureScrollRange={0}
                 markingType={'custom'}
                 markedDates={state.markedDates}
                 theme={{
+                    textDayFontFamily: 'Inter-Regular',
+                    textMonthFontFamily: 'Inter-Regular',
+                    todayTextColor: colors.primary,
                     calendarBackground: colors.white
                 }}
                 firstDay={1}
