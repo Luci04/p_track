@@ -95,7 +95,7 @@ const BottomNavigator = () => {
             {
                 TabArr.map((item, index) => {
                     return <Tab.Screen
-                        key={uuid.v4()}
+                        key={index}
                         name={item.name}
                         options={{
                             tabBarStyle: {

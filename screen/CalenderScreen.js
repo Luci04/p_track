@@ -10,11 +10,18 @@ import { UserContext } from '../context/UserContext';
 
 const CalenderScreen = ({ navigation }) => {
 
-    const { value } = useContext(UserContext);
-    // const periodStart = value;
+    const { periodStart, setPeriodStart, markedPeriodDate } = useContext(UserContext);
 
-
+    const [historyMarkedDates, setHistoryMarkedDates] = useState([])
     const [markingDates, setMarkingDates] = useState({})
+
+    // const parseDates = () => {
+
+    //     console.log("Result", result);
+
+    //     setHistoryMarkedDates(result);
+    // }
+
 
     function compareDates(dateString1, dateString2) {
         const date1 = new Date(dateString1);
@@ -55,47 +62,126 @@ const CalenderScreen = ({ navigation }) => {
         return [fertileStart, fertileEnd];
     }
 
-
     const markPeriod = () => {
 
-        const today = moment().format('YYYY-MM-DD');
+        const result = [];
+
+        let currentStartDate = markedPeriodDate[0];
+        let length = 1;
+
+        for (let i = 0; i < markedPeriodDate.length; i++) {
+            const currentDate = markedPeriodDate[i];
+            const nextDate = new Date(currentDate);
+            nextDate.setDate(nextDate.getDate() + 1);
+            const formattedNextDate = nextDate.toISOString().split('T')[0];
+
+            if (formattedNextDate === markedPeriodDate[i + 1]) {
+                length++;
+            } else {
+                result.push({ startDate: currentStartDate, length: length });
+                currentStartDate = markedPeriodDate[i + 1];
+                length = 1;
+            }
+        }
+
+        result.sort((a, b) => {
+            const dateA = new Date(a.startDate);
+            const dateB = new Date(b.startDate);
+
+            if (dateA < dateB) {
+                return -1;
+            } else if (dateA > dateB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
 
         const tempMark = {};
+        const today = moment().format('YYYY-MM-DD');
 
-        const x = calculateFertileRange('2023-11-01', 28)
-
-
-        for (let j = 0; j < 450; j++) {
+        let startingDate = periodStart
 
 
-            for (let i = 0; i < 5; i++) {
-                const currDate = moment(value).add(j * 28 + i, 'days').format('YYYY-MM-DD');
-                if (i == 0) {
-                    tempMark[currDate] = {
+        if (result.length) {
+            startingDate = result[result.length - 1].startDate;
+
+            for (let element of result) {
+
+                if (element.length == 1) {
+                    tempMark[element.startDate] = {
                         customStyles: {
-                            container: compareDates(today, currDate) !== 'greater' ? styles.expectedPeriodStartDateStyle : styles.periodStartDateStyle,
+                            container: styles.singledateSelection,
                             text: styles.periodDate
                         }
                     }
-                } else if (i == 4) {
+                } else {
+
+                    tempMark[element.startDate] = {
+                        customStyles: {
+                            container: compareDates(today, element.startDate) !== 'greater' ? styles.expectedPeriodStartDateStyle : styles.periodStartDateStyle,
+                            text: styles.periodDate
+                        }
+                    }
+
+                    for (let i = 1; i <= element.length - 2; i++) {
+                        const currDate = moment(element.startDate).add(i, 'days').format('YYYY-MM-DD')
+                        tempMark[currDate] = {
+                            customStyles: {
+                                container: compareDates(today, currDate) == 'greater' ? styles.periodMiddleDateStyle : styles.expectedPeriodMiddleDateStyle,
+                                text: styles.periodDate
+                            }
+                        }
+                    }
+
+                    const currDate = moment(element.startDate).add(element.length - 1, 'days').format('YYYY-MM-DD')
+
                     tempMark[currDate] = {
                         customStyles: {
                             container: compareDates(today, currDate) == 'greater' ? styles.periodEndDateStyle : styles.expectedPeriodEndDateStyle,
                             text: styles.periodDate
                         }
                     }
-                } else {
-                    tempMark[currDate] = {
-                        customStyles: {
-                            container: compareDates(today, currDate) == 'greater' ? styles.periodMiddleDateStyle : styles.expectedPeriodMiddleDateStyle,
-                            text: styles.periodDate
+                }
+            }
+        }
+
+        // const x = calculateFertileRange(startingDate, 28)
+
+
+        for (let j = 0; j < 450; j++) {
+            for (let i = 0; i < 5; i++) {
+
+                if (j > 0) {
+                    const currDate = moment(startingDate).add(j * 28 + i, 'days').format('YYYY-MM-DD');
+                    if (i == 0) {
+                        tempMark[currDate] = {
+                            customStyles: {
+                                container: compareDates(today, currDate) !== 'greater' ? styles.expectedPeriodStartDateStyle : styles.periodStartDateStyle,
+                                text: styles.periodDate
+                            }
+                        }
+                    } else if (i == 4) {
+                        tempMark[currDate] = {
+                            customStyles: {
+                                container: compareDates(today, currDate) == 'greater' ? styles.periodEndDateStyle : styles.expectedPeriodEndDateStyle,
+                                text: styles.periodDate
+                            }
+                        }
+                    } else {
+                        tempMark[currDate] = {
+                            customStyles: {
+                                container: compareDates(today, currDate) == 'greater' ? styles.periodMiddleDateStyle : styles.expectedPeriodMiddleDateStyle,
+                                text: styles.periodDate
+                            }
                         }
                     }
                 }
             }
 
             const ovulateDate = moment(calculateOvulationCycle(
-                moment(value).add(j * 28, 'days').format('YYYY-MM-DD')
+                moment(startingDate).add(j * 28, 'days').format('YYYY-MM-DD')
                 , 28)).format('YYYY-MM-DD')
 
             tempMark[ovulateDate] = {
@@ -150,50 +236,16 @@ const CalenderScreen = ({ navigation }) => {
                         }
                     }
                 }
-
             }
-
-
-
-
-
-
-
         }
-
-
-        // for (let i = 0; i < 5; i++) {
-        //     if (i == 0) {
-        //         tempMark[moment(value).add(28 + i, 'days').format('YYYY-MM-DD')] = {
-        //             customStyles: {
-        //                 container: styles.expectedPeriodStartDateStyle,
-        //                 text: styles.periodDate
-        //             }
-        //         }
-        //     } else if (i == 4) {
-        //         tempMark[moment(value).add(28 + i, 'days').format('YYYY-MM-DD')] = {
-        //             customStyles: {
-        //                 container: styles.expectedPeriodEndDateStyle,
-        //                 text: styles.periodDate
-        //             }
-        //         }
-        //     } else {
-        //         tempMark[moment(value).add(28 + i, 'days').format('YYYY-MM-DD')] = {
-        //             customStyles: {
-        //                 container: styles.expectedPeriodMiddleDateStyle,
-        //                 text: styles.periodDate
-        //             }
-        //         }
-        //     }
-        // }
-
+        setPeriodStart(startingDate);
         setMarkingDates(tempMark)
     }
 
-
     useEffect(() => {
+        // parseDates()
         markPeriod()
-    }, [])
+    }, [markedPeriodDate])
 
 
 
@@ -204,7 +256,6 @@ const CalenderScreen = ({ navigation }) => {
                     todayTextColor: colors.white,
                     todayBackgroundColor: colors.primary,
                 }}
-
                 renderArrow={(direction) => {
                     if (direction === 'left') {
                         return <IconComponent
@@ -220,7 +271,6 @@ const CalenderScreen = ({ navigation }) => {
                             iconName={'chevron-with-circle-right'} />
                     }
                 }}
-
                 markedDates={markingDates}
                 markingType='custom'
                 enableSwipeMonths
@@ -391,5 +441,9 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
+    },
+    singledateSelection: {
+        backgroundColor: colors.primaryLight,
+        borderRadius: 999,
     },
 })

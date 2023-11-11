@@ -4,10 +4,15 @@ const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
 
-    const [value, setValue] = useState('2023-10-4');
+    const [periodStart, setPeriodStart] = useState('2023-11-04');
+    const [periodLength, setPeriodLength] = useState(6);
+    const [periodCycle, setPeriodCycle] = useState(28);
+    const [markedPeriodDate, setMarkedPeriodDate] = useState([]);
+    const [DateHistory, setDateHistory] = useState({});
+
 
     return (
-        <UserContext.Provider value={{ value }}>
+        <UserContext.Provider value={{ periodStart, setPeriodStart, periodLength, periodCycle, markedPeriodDate, setMarkedPeriodDate, DateHistory, setDateHistory }}>
             {children}
         </UserContext.Provider>
     );

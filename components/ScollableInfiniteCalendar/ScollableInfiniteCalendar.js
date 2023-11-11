@@ -1,22 +1,26 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { CalendarList } from 'react-native-calendars'
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../../theme/styles';
 import XDate from 'xdate'
 import SafeView from '../SafeView/SafeView';
 import Modal from "react-native-modal";
+import { UserContext } from '../../context/UserContext';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import moment from 'moment';
 
 
 
 const ScollableInfiniteCalendar = () => {
+
+    const { markedPeriodDate, setMarkedPeriodDate } = useContext(UserContext);
 
 
     const [visible, setVisible] = React.useState(false);
 
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
-    const containerStyle = { backgroundColor: 'white', padding: 20 };
 
     const navigation = useNavigation();
 
@@ -28,14 +32,13 @@ const ScollableInfiniteCalendar = () => {
         holidayList: {}
     })
 
+    const [selectedDates, setSelectedDates] = useState(markedPeriodDate)
+
     const setupMarketDate = (fromDate, toDate, markedDates) => {
 
         let mFromDate = new XDate(fromDate);
         let mToDate = new XDate(toDate);
-
         let range = mFromDate.diffDays(mToDate);
-
-        console.log(range);
 
         if (range > 0) {
 
@@ -139,22 +142,67 @@ const ScollableInfiniteCalendar = () => {
             });
     }, [navigation]);
 
+    function generateDateObject(dateArray) {
+        const dateObject = {};
+
+
+        for (const element of dateArray) {
+            const formattedDate = element;
+
+            const customStyles = {
+                startingDay: true,
+                customStyles: {
+                    container: styles.singledateSelection,
+                    text: styles.textStyle
+                }
+            };
+
+            dateObject[formattedDate] = customStyles;
+        }
+
+        return dateObject;
+    }
+
+    function sortDateRangesByStartDate(dateRanges) {
+        dateRanges.sort((a, b) => {
+            const dateA = new Date(a);
+            const dateB = new Date(b);
+
+            if (dateA < dateB) {
+                return -1;
+            } else if (dateA > dateB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        return dateRanges;
+    }
+
+    const saveDate = () => {
+        setMarkedPeriodDate(sortDateRangesByStartDate(selectedDates));
+        navigation.goBack();
+    }
+
 
     return (
         <SafeView>
-
-            <Modal>
-                <View style={{ flex: 1 }}>
-                    <Text>I am the modal content!</Text>
-                </View>
-            </Modal>
-
             <CalendarList
-                onDayPress={onDayPress}
+                style={{ height: "90%" }}
+                onDayPress={(d) => {
+                    // onDayPress(d);
+
+                    if (selectedDates.filter(date => date === d.dateString).length) {
+                        setSelectedDates(selectedDates.filter(date => date !== d.dateString));
+                    } else {
+                        setSelectedDates([...selectedDates, d.dateString]);
+                    }
+                }}
                 pastScrollRange={3}
                 futureScrollRange={0}
                 markingType={'custom'}
-                markedDates={state.markedDates}
+                markedDates={generateDateObject(selectedDates)}
                 theme={{
                     textDayFontFamily: 'Inter-Regular',
                     textMonthFontFamily: 'Inter-Regular',
@@ -162,7 +210,45 @@ const ScollableInfiniteCalendar = () => {
                     calendarBackground: colors.white
                 }}
                 firstDay={1}
+                maxDate={moment().format('YYYY-MM-DD')}
             />
+            <View style={{
+                backgroundColor: '#fff',
+                alignItems: 'center',
+                flexDirection: 'row',
+                flex: 1,
+                justifyContent: 'space-around'
+            }}>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.goBack();
+                    }}
+                >
+                    <View style={{
+                        backgroundColor: colors.primary,
+                        paddingHorizontal: 25,
+                        paddingVertical: 15,
+                        borderRadius: 50
+                    }}>
+                        <Text style={{ color: '#fff' }}>
+                            Cancel
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={saveDate}
+                >
+                    <View style={{
+                        paddingHorizontal: 25,
+                        paddingVertical: 15,
+                        borderRadius: 50
+                    }}>
+                        <Text style={{ color: colors.primary }}>
+                            Save
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
         </SafeView>
 
     )
@@ -202,6 +288,10 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
+    },
+    singledateSelection: {
+        backgroundColor: colors.primaryLight,
+        borderRadius: 999,
     },
     textStyle: {
         fontSize: 15,
