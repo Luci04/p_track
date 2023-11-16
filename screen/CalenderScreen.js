@@ -66,21 +66,24 @@ const CalenderScreen = ({ navigation }) => {
 
         const result = [];
 
-        let currentStartDate = markedPeriodDate[0];
-        let length = 1;
+        if (markedPeriodDate?.length) {
 
-        for (let i = 0; i < markedPeriodDate.length; i++) {
-            const currentDate = markedPeriodDate[i];
-            const nextDate = new Date(currentDate);
-            nextDate.setDate(nextDate.getDate() + 1);
-            const formattedNextDate = nextDate.toISOString().split('T')[0];
+            let currentStartDate = markedPeriodDate[0];
+            let length = 1;
 
-            if (formattedNextDate === markedPeriodDate[i + 1]) {
-                length++;
-            } else {
-                result.push({ startDate: currentStartDate, length: length });
-                currentStartDate = markedPeriodDate[i + 1];
-                length = 1;
+            for (let i = 0; i < markedPeriodDate.length; i++) {
+                const currentDate = markedPeriodDate[i];
+                const nextDate = new Date(currentDate);
+                nextDate.setDate(nextDate.getDate() + 1);
+                const formattedNextDate = nextDate.toISOString().split('T')[0];
+
+                if (formattedNextDate === markedPeriodDate[i + 1]) {
+                    length++;
+                } else {
+                    result.push({ startDate: currentStartDate, length: length });
+                    currentStartDate = markedPeriodDate[i + 1];
+                    length = 1;
+                }
             }
         }
 
