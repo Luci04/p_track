@@ -1,5 +1,5 @@
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View, findNodeHandle } from 'react-native'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import SafeView from '../components/SafeView/SafeView'
 import { colors } from '../theme/styles'
 import emojiMap from '../appConst/emojiMapping';
@@ -11,16 +11,23 @@ import { UserContext } from '../context/UserContext';
 const StatsScreen = () => {
 
     const [selectedOptions, setSelectedOptions] = useState({
-        "Sexual Activity": null,
-        "Symptoms Activity": null,
-        "Moods": null,
-        "Contraception": null,
+        "Sexual Activity": 4,
+        "Symptoms Activity": 9,
+        "Moods": 42,
+        "Contraception": 49,
     })
 
     const [futurePeriodDayLeft, setFuturePeriodDayLeft] = useState(0);
     const [customDatesStyles, setCustomDatesStyles] = useState([]);
     const [isPeriodDay, setIsPeriodDay] = useState(false);
     const [nthePeriodDay, setNthPeriodDay] = useState(0);
+    const [currentStartDate, setCurrentStartDate] = useState(moment().format('YYYY-MM-DD'))
+
+    //ScrollView Refs
+    const scroll1 = useRef(null)
+    const scroll2 = useRef(null)
+    const scroll3 = useRef(null)
+    const scroll4 = useRef(null)
 
 
 
@@ -47,10 +54,6 @@ const StatsScreen = () => {
 
         console.log(periodStart);
 
-        let maxPeriodDateSmallerThanCurrent = null;
-        let minPeriodDateGreaterThanCurrent = null;
-
-
         const tempCustomDateStyle = [];
 
         const result = [];
@@ -64,12 +67,8 @@ const StatsScreen = () => {
                 const currentDate = markedPeriodDate[i];
                 const nextDate = new Date(currentDate);
                 nextDate.setDate(nextDate.getDate() + 1);
+
                 const formattedNextDate = nextDate.toISOString().split('T')[0];
-
-                if (maxPeriodDateSmallerThanCurrent == null) {
-                    maxPeriodDateSmallerThanCurrent = formattedNextDate;
-                }
-
                 if (formattedNextDate === markedPeriodDate[i + 1]) {
                     length++;
                 } else {
@@ -97,7 +96,7 @@ const StatsScreen = () => {
             const gap = element;
             if (gap.length == 1) {
                 tempCustomDateStyle.push({
-                    startDate: moment(gap.startDate), // Single date since no endDate provided
+                    startDate: moment(gap.startDate).format('YYYY-MM-DD'), // Single date since no endDate provided
                     dateNameStyle: styles.dateNameStyle,
                     dateNumberStyle: styles.dateNumberStyle,
                     dateContainerStyle: {
@@ -113,7 +112,7 @@ const StatsScreen = () => {
                 for (let j = 0; j < gap.length; j++) {
                     if (j == 0) {
                         tempCustomDateStyle.push({
-                            startDate: moment(gap.startDate).add(j, 'days'), // Single date since no endDate provided
+                            startDate: moment(gap.startDate).add(j, 'days').format('YYYY-MM-DD'), // Single date since no endDate provided
                             dateNameStyle: styles.dateNameStyle,
                             dateNumberStyle: styles.dateNumberStyle,
                             dateContainerStyle: {
@@ -127,7 +126,7 @@ const StatsScreen = () => {
                         });
                     } else if (j == gap.length - 1) {
                         tempCustomDateStyle.push({
-                            startDate: moment(gap.startDate).add(j, 'days'), // Single date since no endDate provided
+                            startDate: moment(gap.startDate).add(j, 'days').format('YYYY-MM-DD'), // Single date since no endDate provided
                             dateNameStyle: styles.dateNameStyle,
                             dateNumberStyle: styles.dateNumberStyle,
                             dateContainerStyle: {
@@ -141,7 +140,7 @@ const StatsScreen = () => {
                         });
                     } else {
                         tempCustomDateStyle.push({
-                            startDate: moment(gap.startDate).add(j, 'days'), // Single date since no endDate provided
+                            startDate: moment(gap.startDate).add(j, 'days').format('YYYY-MM-DD'), // Single date since no endDate provided
                             dateNameStyle: styles.dateNameStyle,
                             dateNumberStyle: styles.dateNumberStyle,
                             dateContainerStyle: {
@@ -219,31 +218,6 @@ const StatsScreen = () => {
 
         }
 
-        const today = moment().format('YYYY-MM-DD')
-
-        console.log("Today::", today)
-
-        //Till Cycle Length
-
-        if (tempCustomDateStyle.filter((data) => data.startDate == today).length) {
-            let count = 1;
-
-            for (let i = 1; i < 5; i++) {
-                const prevDate = moment().subtract(i, 'days').format('YYYY-MM-DD');
-                if (tempCustomDateStyle.filter(data => data.startDate == prevDate).length) {
-                    count++;
-                } else {
-                    break;
-                }
-            }
-
-            setIsPeriodDay(true);
-            setNthPeriodDay(count);
-        }
-
-
-
-
         setCustomDatesStyles(tempCustomDateStyle);
     }
 
@@ -253,21 +227,74 @@ const StatsScreen = () => {
 
     useEffect(() => {
         setSaveOptionVisible(true)
+
     }, [selectedOptions])
 
-    const blackListFutureWeekDays = () => {
-        const disableCount = 7 - moment().day();
+    useEffect(() => {
+        //Till Cycle Length
 
-        let blackListDate = [];
+        if (customDatesStyles.filter((data) => data.startDate === currentStartDate).length) {
+            let count = 1;
 
-        for (let i = 1; i <= disableCount; i++) {
-            blackListDate.push(moment().add(i, 'days'));
+            for (let i = 1; i < 5; i++) {
+                const prevDate = moment(currentStartDate).subtract(i, 'days').format('YYYY-MM-DD');
+                if (customDatesStyles.filter(data => data.startDate == prevDate).length) {
+                    count++;
+                } else {
+                    break;
+                }
+            }
+
+            setIsPeriodDay(true);
+            setNthPeriodDay(count);
+        } else {
+            setIsPeriodDay(false);
+            setNthPeriodDay(0);
         }
 
-        console.log(blackListDate)
+        // scrollToIfSelected();
+    }, [currentStartDate])
 
-        return blackListDate;
-    }
+
+    const scrollToElement = () => {
+
+        if (selectedOptions['Sexual Activity']) {
+            scroll1.current.scrollTo({ x: 0, y: (60 * (selectedOptions['Sexual Activity'])) + (selectedOptions['Sexual Activity'] + 1 > 1 ? 5 * (selectedOptions['Sexual Activity'] + 1) : 0), animated: true });
+        }
+
+        if (selectedOptions['Symptoms Activity']) {
+            scroll2.current.scrollTo({ x: 0, y: (60 * (selectedOptions['Symptoms Activity'] - 5)) + (selectedOptions['Symptoms Activity'] - 5 + 1 > 1 ? 5 * (selectedOptions['Symptoms Activity'] - 5 + 1) : 0), animated: true });
+        }
+
+        if (selectedOptions["Moods"]) {
+            scroll3.current.scrollTo({ x: 0, y: (60 * (selectedOptions["Moods"] - 38)) + (selectedOptions["Moods"] - 38 + 1 > 1 ? 5 * (selectedOptions["Moods"] - 38 + 1) : 0), animated: true });
+        }
+
+        if (selectedOptions["Contraception"]) {
+            scroll4.current.scrollTo({ x: 0, y: (60 * (selectedOptions["Contraception"] - 48)) + (selectedOptions["Contraception"] - 48 + 1 > 1 ? 5 * (selectedOptions["Contraception"] - 48 + 1) : 0), animated: true });
+        }
+    };
+
+    // const scrollToIfSelected = () => {
+    //     if (selectedOptions['Sexual Activity']) {
+    //         scroll2.current.scrollTo({ x: 0, y: (60 * (selectedOptions['Sexual Activity'] )) + (selectedOptions['Sexual Activity']-5 > 1 ? 5 * (selectedOptions['Sexual Activity']) : 0), animated: true, viewOffset: 10, });
+    //     }
+
+    // }
+
+
+    // const blackListFutureWeekDays = () => {
+    //     const disableCount = 7 - moment().day();
+
+    //     let blackListDate = [];
+
+    //     for (let i = 1; i <= disableCount; i++) {
+    //         blackListDate.push(moment().add(i, 'days'));
+    //     }
+
+    //     // console.log("BlackList", blackListDate)
+    //     return blackListDate;
+    // }
 
     const handleFeelings = (type, id) => {
         const currSelectedOption = selectedOptions;
@@ -289,42 +316,71 @@ const StatsScreen = () => {
                 }}
             >
                 <CalendarStrip
-                    onDateSelected={(data) => {
-                        console.log(data);
+                    iconStyle={{
+                        height: 20,
+                        width: 20,
+                        margin: 10
                     }}
+
+                    selectedDate={currentStartDate}
+
+                    onDateSelected={(data) => {
+                        setCurrentStartDate(moment(data).format('YYYY-MM-DD'));
+                    }}
+
                     daySelectionAnimation={{
                         type: 'background',
                         borderWidth: 1,
-                        highlightColor: '#eb848f'
+                        highlightColor: '#eb848f',
+
                     }}
+
                     customDatesStyles={customDatesStyles}
+
                     calendarHeaderContainerStyle={{
                         paddingBottom: 10
                     }}
+
                     calendarHeaderStyle={{
                         fontFamily: 'Inter-Thin',
                         color: colors.primary,
                         fontSize: 18,
                     }}
+
                     style={{
                         paddingVertical: 10,
                         height: 100
                     }}
+
                     dateNameStyle={{
                         color: '#bfc0c7',
                         fontSize: 6,
                         fontFamily: 'Inter-Regular',
                     }}
+
                     maxDate={moment().format("YYYY-MM-DD")}
-                    datesBlacklist={blackListFutureWeekDays()}
-                    disabledDateNameStyle={{ color: 'grey' }}
-                    disabledDateNumberStyle={{ color: 'grey' }}
+
+                    // datesBlacklist={blackListFutureWeekDays()}
+
+                    disabledDateNameStyle={{ color: 'grey', fontSize: 15 }}
+
+                    disabledDateNumberStyle={{ color: 'grey', fontSize: 15 }}
+
                     dateNumberStyle={{
                         color: '#000',
                         fontFamily: 'Inter-Regular',
                         fontSize: 15,
                     }}
 
+                    highlightDateNameStyle={{
+                        fontFamily: 'Inter-Regular',
+                        fontSize: 8,
+                    }}
+
+                    highlightDateNumberStyle={{
+                        fontFamily: 'Inter-Regular',
+                        fontSize: 15,
+                    }}
 
                 />
                 <View style={{ paddingHorizontal: 20, }}>
@@ -339,40 +395,145 @@ const StatsScreen = () => {
                         }
 
                     </View>
-                    {
-                        Object.keys(emojiMap).map(type => {
-                            return <ScrollView key={type} contentContainerStyle={{ gap: 5, paddingVertical: 10 }}  >
-                                <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
-                                    <Text style={{ color: '#000' }}>{type}</Text>
-                                    {/* <Text style={{ color: '#000' }}>Select All</Text> */}
-                                </View>
-                                <ScrollView
-                                    horizontal
-                                    contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', gap: 10 }}
-                                    showsHorizontalScrollIndicator={false}
+
+                    <View style={{ gap: 5, paddingVertical: 10 }}  >
+                        <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
+                            <Text style={{ color: '#000' }}>{"Sexual Activity"}</Text>
+                            {/* <Text style={{ color: '#000' }}>Select All</Text> */}
+                        </View>
+                        <ScrollView
+                            horizontal
+                            contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', gap: 10 }}
+                            showsHorizontalScrollIndicator={false}
+                            ref={scroll1}
+                        >
+                            {emojiMap["Sexual Activity"].map((mood) => (
+                                <TouchableOpacity
+                                    onPress={() => handleFeelings("Sexual Activity", mood.id)}
+                                    key={mood.id}
+                                    nativeID={mood.id}
                                 >
-                                    {emojiMap[type].map((mood) => (
-                                        <TouchableOpacity
-                                            onPress={() => handleFeelings(type, mood.id)}
-                                            key={mood.id}>
-                                            <View
-                                                style={{ gap: 5, width: 60 }}
-                                            >
-                                                <View style={{ padding: 15, borderColor: selectedOptions[type] === mood.id ? colors.primary : '#f7f8f9', borderWidth: 2, borderRadius: 8, justifyContent: 'center', alignItems: 'center' }}>
-                                                    <Text style={{ fontSize: 20, color: '#000' }}>{mood.emoji}</Text>
-                                                </View>
-                                                <Text style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</Text>
-                                            </View>
-                                        </TouchableOpacity>
+                                    <View
+                                        style={{ gap: 5, width: 60 }}
+                                    >
+                                        <View style={{
+                                            padding: 15,
+                                            borderColor: selectedOptions["Sexual Activity"] == mood.id ? colors.primary : '#f7f8f9', borderWidth: 2, borderRadius: 8, justifyContent: 'center', alignItems: 'center'
+                                        }}>
+                                            <Text style={{ fontSize: 20, color: '#000' }}>{mood.emoji}</Text>
+                                        </View>
+                                        <Text style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</Text>
+                                    </View>
+                                </TouchableOpacity>
 
-                                    ))}
-                                </ScrollView>
-                            </ScrollView>
-                        })
-                    }
+                            ))}
+                        </ScrollView>
+                    </View>
+
+                    <View style={{ gap: 5, paddingVertical: 10 }}  >
+                        <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
+                            <Text style={{ color: '#000' }}>{"Symptoms Activity"}</Text>
+                            {/* <Text style={{ color: '#000' }}>Select All</Text> */}
+                        </View>
+                        <ScrollView
+                            horizontal
+                            contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', gap: 10 }}
+                            showsHorizontalScrollIndicator={false}
+                            ref={scroll2}
+                        >
+                            {emojiMap["Symptoms Activity"].map((mood) => (
+                                <TouchableOpacity
+                                    onPress={() => handleFeelings("Symptoms Activity", mood.id)}
+                                    key={mood.id}
+                                    nativeID={mood.id}
+                                >
+                                    <View
+                                        style={{ gap: 5, width: 60 }}
+                                    >
+                                        <View style={{
+                                            padding: 15,
+                                            borderColor: selectedOptions["Symptoms Activity"] == mood.id ? colors.primary : '#f7f8f9', borderWidth: 2, borderRadius: 8, justifyContent: 'center', alignItems: 'center'
+                                        }}>
+                                            <Text style={{ fontSize: 20, color: '#000' }}>{mood.emoji}</Text>
+                                        </View>
+                                        <Text style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</Text>
+                                    </View>
+                                </TouchableOpacity>
+
+                            ))}
+                        </ScrollView>
+                    </View>
+
+                    <View style={{ gap: 5, paddingVertical: 10 }}  >
+                        <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
+                            <Text style={{ color: '#000' }}>{"Moods"}</Text>
+                            {/* <Text style={{ color: '#000' }}>Select All</Text> */}
+                        </View>
+                        <ScrollView
+                            horizontal
+                            contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', gap: 10 }}
+                            showsHorizontalScrollIndicator={false}
+                            ref={scroll3}
+                        >
+                            {emojiMap["Moods"].map((mood) => (
+                                <TouchableOpacity
+                                    onPress={() => handleFeelings("Moods", mood.id)}
+                                    key={mood.id}
+                                    nativeID={mood.id}
+                                >
+                                    <View
+                                        style={{ gap: 5, width: 60 }}
+                                    >
+                                        <View style={{
+                                            padding: 15,
+                                            borderColor: selectedOptions["Moods"] == mood.id ? colors.primary : '#f7f8f9', borderWidth: 2, borderRadius: 8, justifyContent: 'center', alignItems: 'center'
+                                        }}>
+                                            <Text style={{ fontSize: 20, color: '#000' }}>{mood.emoji}</Text>
+                                        </View>
+                                        <Text style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</Text>
+                                    </View>
+                                </TouchableOpacity>
+
+                            ))}
+                        </ScrollView>
+                    </View>
+
+                    <View style={{ gap: 5, paddingVertical: 10 }}  >
+                        <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
+                            <Text style={{ color: '#000' }}>{"Contraception"}</Text>
+                            {/* <Text style={{ color: '#000' }}>Select All</Text> */}
+                        </View>
+                        <ScrollView
+                            horizontal
+                            contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', gap: 10 }}
+                            showsHorizontalScrollIndicator={false}
+                            ref={scroll4}
+                        >
+                            {emojiMap["Contraception"].map((mood) => (
+                                <TouchableOpacity
+                                    onPress={() => handleFeelings("Contraception", mood.id)}
+                                    key={mood.id}
+                                    nativeID={mood.id}
+                                >
+                                    <View
+                                        style={{ gap: 5, width: 60 }}
+                                    >
+                                        <View style={{
+                                            padding: 15,
+                                            borderColor: selectedOptions["Contraception"] == mood.id ? colors.primary : '#f7f8f9', borderWidth: 2, borderRadius: 8, justifyContent: 'center', alignItems: 'center'
+                                        }}>
+                                            <Text style={{ fontSize: 20, color: '#000' }}>{mood.emoji}</Text>
+                                        </View>
+                                        <Text style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</Text>
+                                    </View>
+                                </TouchableOpacity>
+
+                            ))}
+                        </ScrollView>
+                    </View>
 
                     {
-                        saveOptionVisible ? <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        saveOptionVisible ? <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 20 }}>
                             <TouchableOpacity
                                 onPress={() => {
                                     setSaveOptionVisible(false);
@@ -384,7 +545,9 @@ const StatsScreen = () => {
                                     </Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => scrollToElement(selectedOptions['Symptoms Activity'])}
+                            >
                                 <View style={{ backgroundColor: colors.primary, paddingHorizontal: 20, paddingVertical: 15, borderRadius: 10 }}>
                                     <Text style={{ color: '#fff', fontSize: 15 }}>
                                         Save
