@@ -6,6 +6,7 @@ import emojiMap from '../appConst/emojiMapping';
 import CalendarStrip from 'react-native-calendar-strip'
 import moment from 'moment';
 import { UserContext } from '../context/UserContext';
+import { deleteTable, getDBConnection, getNote, readData, saveNote } from '../db-service';
 
 
 const StatsScreen = () => {
@@ -22,6 +23,7 @@ const StatsScreen = () => {
     const [isPeriodDay, setIsPeriodDay] = useState(false);
     const [nthePeriodDay, setNthPeriodDay] = useState(0);
     const [currentStartDate, setCurrentStartDate] = useState(moment().format('YYYY-MM-DD'))
+    const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'))
 
     //ScrollView Refs
     const scroll1 = useRef(null)
@@ -230,14 +232,27 @@ const StatsScreen = () => {
 
     }, [selectedOptions])
 
+    const fetchSelectedDateInfo = async () => {
+
+        try {
+
+            const result = await getNote(moment().format('YYYY-MM-DD'));
+
+            console.log(result)
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
         //Till Cycle Length
 
-        if (customDatesStyles.filter((data) => data.startDate === currentStartDate).length) {
+        if (customDatesStyles.filter((data) => data.startDate === selectedDate).length) {
             let count = 1;
 
             for (let i = 1; i < 5; i++) {
-                const prevDate = moment(currentStartDate).subtract(i, 'days').format('YYYY-MM-DD');
+                const prevDate = moment(selectedDate).subtract(i, 'days').format('YYYY-MM-DD');
                 if (customDatesStyles.filter(data => data.startDate == prevDate).length) {
                     count++;
                 } else {
@@ -251,6 +266,8 @@ const StatsScreen = () => {
             setIsPeriodDay(false);
             setNthPeriodDay(0);
         }
+
+        fetchSelectedDateInfo();
 
         // scrollToIfSelected();
     }, [currentStartDate])
@@ -322,10 +339,10 @@ const StatsScreen = () => {
                         margin: 10
                     }}
 
-                    selectedDate={currentStartDate}
+                    selectedDate={selectedDate}
 
                     onDateSelected={(data) => {
-                        setCurrentStartDate(moment(data).format('YYYY-MM-DD'));
+                        setSelectedDate(moment(data).format('YYYY-MM-DD'));
                     }}
 
                     daySelectionAnimation={{
@@ -546,7 +563,17 @@ const StatsScreen = () => {
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={() => scrollToElement(selectedOptions['Symptoms Activity'])}
+                                onPress={() => {
+                                    console.log(selectedOptions, selectedDate)
+                                    saveNote(
+                                        {
+                                            date: selectedDate,
+                                            contraception: selectedOptions["Contraception"],
+                                            moods: selectedOptions["Moods"],
+                                            sexualActivity: selectedOptions['Sexual Activity'],
+                                            symptomsActivity: selectedOptions['Sexual Activity']
+                                        })
+                                }}
                             >
                                 <View style={{ backgroundColor: colors.primary, paddingHorizontal: 20, paddingVertical: 15, borderRadius: 10 }}>
                                     <Text style={{ color: '#fff', fontSize: 15 }}>

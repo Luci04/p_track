@@ -1,5 +1,7 @@
-[
-  {
+import { ShareInfo, onCreateTriggerNotification } from "../utility/helperFunction";
+
+export default {
+  "My Cycle": {
     "title": "My Cycle",
     "iconName": "water-drop",
     "iconCommunity": "MaterialIcons",
@@ -15,7 +17,7 @@
       }
     ]
   },
-  {
+  "Reminders": {
     "title": "Reminders",
     "iconName": "bell",
     "iconCommunity": "Entypo",
@@ -43,7 +45,7 @@
       }
     ]
   },
-  {
+  "Personal": {
     "title": "Personal",
     "iconName": "face-woman-shimmer-outline",
     "iconCommunity": "MaterialCommunityIcons",
@@ -68,7 +70,7 @@
       }
     ]
   },
-  {
+  "My Data": {
     "title": "My Data",
     "iconName": "database",
     "iconCommunity": "Octicons",
@@ -84,26 +86,37 @@
       }
     ]
   },
-  {
+  "Other": {
     "title": "Other",
     "iconName": "setting",
     "iconCommunity": "AntDesign",
-    "children": [
-      {
+    "children": {
+
+      "Upgrade to Premium": {
         "title": "Upgrade to Premium"
       },
+      "Remove ads":
       {
         "title": "Remove ads"
       },
+      "Share with friends":
       {
-        "title": "Share with friends"
+        "title": "Share with friends",
+        onClick: ShareInfo
       },
+      "Security":
+      {
+        "title": "Security",
+        onClick: onCreateTriggerNotification
+      },
+      "Privacy":
       {
         "title": "Privacy"
       },
+      "Rate app":
       {
         "title": "Rate app"
       }
-    ]
+    }
   }
-]
+}

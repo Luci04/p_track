@@ -9,10 +9,10 @@ const UserProvider = ({ children }) => {
     const [periodCycle, setPeriodCycle] = useState(28);
     const [markedPeriodDate, setMarkedPeriodDate] = useState([]);
     const [DateHistory, setDateHistory] = useState({});
-
+    const [authenticated, setAuthenticated] = useState(true)
 
     return (
-        <UserContext.Provider value={{ periodStart, setPeriodStart, periodLength, periodCycle, markedPeriodDate, setMarkedPeriodDate, DateHistory, setDateHistory }}>
+        <UserContext.Provider value={{ periodStart, setPeriodStart, periodLength, periodCycle, markedPeriodDate, setMarkedPeriodDate, DateHistory, setDateHistory, authenticated, setAuthenticated }}>
             {children}
         </UserContext.Provider>
     );
