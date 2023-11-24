@@ -6,32 +6,34 @@ import emojiMap from '../appConst/emojiMapping';
 import CalendarStrip from 'react-native-calendar-strip'
 import moment from 'moment';
 import { UserContext } from '../context/UserContext';
-import { deleteTable, getDBConnection, getNote, readData, saveNote } from '../db-service';
+import { openDatabase } from 'react-native-sqlite-storage';
+import { useNavigation } from '@react-navigation/native';
 
+var db = openDatabase({ name: 'DatabaseName5.db' });
 
-const StatsScreen = () => {
+const StatsScreen = ({ route }) => {
 
     const [selectedOptions, setSelectedOptions] = useState({
-        "Sexual Activity": 4,
-        "Symptoms Activity": 9,
-        "Moods": 42,
-        "Contraception": 49,
+        "Sexual Activity": null,
+        "Symptoms Activity": null,
+        "Moods": null,
+        "Contraception": null
     })
+
+    const monitorDate = route.params?.monitorDate
 
     const [futurePeriodDayLeft, setFuturePeriodDayLeft] = useState(0);
     const [customDatesStyles, setCustomDatesStyles] = useState([]);
     const [isPeriodDay, setIsPeriodDay] = useState(false);
     const [nthePeriodDay, setNthPeriodDay] = useState(0);
     const [currentStartDate, setCurrentStartDate] = useState(moment().format('YYYY-MM-DD'))
-    const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'))
-
+    const [selectedDate, setSelectedDate] = useState(monitorDate ? monitorDate : moment().format('YYYY-MM-DD'))
+    const prevObject = useRef({});
     //ScrollView Refs
     const scroll1 = useRef(null)
     const scroll2 = useRef(null)
     const scroll3 = useRef(null)
     const scroll4 = useRef(null)
-
-
 
 
     const [saveOptionVisible, setSaveOptionVisible] = useState(false);
@@ -223,26 +225,117 @@ const StatsScreen = () => {
         setCustomDatesStyles(tempCustomDateStyle);
     }
 
+    function shallowCompare(obj1, obj2) {
+        const keys1 = Object.keys(obj1);
+        const keys2 = Object.keys(obj2);
+
+        if (keys1.length !== keys2.length) {
+            return false;
+        }
+
+        for (const key of keys1) {
+            if (obj1[key] !== obj2[key]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     useEffect(() => {
         markingDates();
     }, [periodStart])
 
     useEffect(() => {
-        setSaveOptionVisible(true)
-
-    }, [selectedOptions])
-
-    const fetchSelectedDateInfo = async () => {
-
-        try {
-
-            const result = await getNote(moment().format('YYYY-MM-DD'));
-
-            console.log(result)
-
-        } catch (error) {
-            console.error(error);
+        if (!shallowCompare(selectedOptions, prevObject.current)) {
+            setSaveOptionVisible(true)
+            scrollToElement();
         }
+
+        // Update the prevObject reference
+        prevObject.current = selectedOptions;
+    }, [selectedOptions]);
+
+    useEffect(() => {
+        db.transaction((txn) => {
+            txn.executeSql(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='table_user'",
+                [],
+                (tx, res) => {
+                    if (res.rows.length == 0) {
+                        txn.executeSql('DROP TABLE IF EXISTS table_user', []);
+                        txn.executeSql(
+                            `CREATE TABLE IF NOT EXISTS table_user(id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR(20) UNIQUE, sexualActivity VARCHAR(2), symptomsActivity VARCHAR(2), moods VARCHAR(2), contraception VARCHAR(2))`,
+                            []
+                        );
+                    } else {
+                        console.log("Already Created Table")
+                    }
+                }
+            );
+        });
+
+    }, [])
+
+    const saveData = () => {
+
+        db.transaction((txn) => {
+            try {
+                console.log("Inserting data into table_user...");
+                txn.executeSql(
+                    `INSERT OR REPLACE INTO table_user (date, sexualActivity, symptomsActivity, moods, contraception) VALUES (?, ?, ?, ?, ?)`,
+                    [selectedDate, selectedOptions['Sexual Activity'], selectedOptions['Symptoms Activity'], selectedOptions['Moods'], selectedOptions['Contraception']],
+                    (tx, results) => {
+                        console.log("Rows affected:", results.rowsAffected);
+                        if (results.rowsAffected > 0) {
+                            console.log("Data Inserted");
+                        } else {
+                            console.log("Failed to insert data");
+                        }
+                    }
+                );
+            } catch (error) {
+                console.error("Error inserting data:", error);
+            }
+        });
+    }
+
+    const showData = (date) => {
+
+        db.transaction((txn) => {
+            try {
+                console.log("Showing data into table_user...");
+                txn.executeSql(
+                    `SELECT * FROM table_user where date = ?`,
+                    [date],
+                    (tx, results) => {
+                        var temp = [];
+                        for (let i = 0; i < results.rows.length; ++i)
+                            temp.push(results.rows.item(i));
+                        console.log(temp);
+                        if (temp.length) {
+                            setSelectedOptions({
+                                "Sexual Activity": temp[0].sexualActivity,
+                                "Symptoms Activity": temp[0].symptomsActivity,
+                                "Moods": temp[0].moods,
+                                "Contraception": temp[0].contraception,
+                            })
+                        } else {
+                            setSelectedOptions({
+                                "Sexual Activity": null,
+                                "Symptoms Activity": null,
+                                "Moods": null,
+                                "Contraception": null
+                            })
+                        }
+                    }
+                );
+            } catch (error) {
+                console.error("Error inserting data:", error);
+            }
+        });
+
+        setSelectedDate(date);
     }
 
     useEffect(() => {
@@ -267,10 +360,8 @@ const StatsScreen = () => {
             setNthPeriodDay(0);
         }
 
-        fetchSelectedDateInfo();
-
-        // scrollToIfSelected();
     }, [currentStartDate])
+
 
 
     const scrollToElement = () => {
@@ -321,7 +412,13 @@ const StatsScreen = () => {
         } else {
             setSelectedOptions({ ...selectedOptions, [type]: id })
         }
+        console.log(currSelectedOption)
     }
+
+    useEffect(() => {
+        showData(monitorDate || selectedDate);
+    }, [selectedDate, monitorDate])
+
 
     return (
         <SafeView style={{
@@ -554,6 +651,7 @@ const StatsScreen = () => {
                             <TouchableOpacity
                                 onPress={() => {
                                     setSaveOptionVisible(false);
+                                    showData(selectedDate)
                                 }}
                             >
                                 <View style={{ backgroundColor: colors.primary, paddingHorizontal: 20, paddingVertical: 15, borderRadius: 10 }}>
@@ -564,15 +662,8 @@ const StatsScreen = () => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => {
-                                    console.log(selectedOptions, selectedDate)
-                                    saveNote(
-                                        {
-                                            date: selectedDate,
-                                            contraception: selectedOptions["Contraception"],
-                                            moods: selectedOptions["Moods"],
-                                            sexualActivity: selectedOptions['Sexual Activity'],
-                                            symptomsActivity: selectedOptions['Sexual Activity']
-                                        })
+                                    console.log(selectedDate);
+                                    saveData(selectedDate)
                                 }}
                             >
                                 <View style={{ backgroundColor: colors.primary, paddingHorizontal: 20, paddingVertical: 15, borderRadius: 10 }}>

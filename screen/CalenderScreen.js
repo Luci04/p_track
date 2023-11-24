@@ -214,9 +214,6 @@ const CalenderScreen = ({ navigation }) => {
                         }
                     }
                 }
-
-
-
             }
 
             for (let i = 1; i <= 4; i++) {
@@ -274,6 +271,9 @@ const CalenderScreen = ({ navigation }) => {
                             iconName={'chevron-with-circle-right'} />
                     }
                 }}
+                onDayPress={(data) => {
+                    navigation.navigate('Stats', { monitorDate: data.dateString });
+                }}
                 markedDates={markingDates}
                 markingType='custom'
                 enableSwipeMonths
@@ -281,7 +281,9 @@ const CalenderScreen = ({ navigation }) => {
                     const currdate = new Date(date);
                     return <Text
                         style={{ fontSize: 25, color: colors.primaryLight, fontFamily: 'Inter-Regular' }}
-                    >{MonthMapping[currdate.getMonth()]} {currdate.getFullYear()}</Text>
+                    >
+                        {MonthMapping[currdate.getMonth()]} {currdate.getFullYear()}
+                    </Text>
                 }}
             />
             <View style={{ padding: 15, borderColor: colors.borderColor, borderWidth: 1, borderRadius: 8, flexDirection: 'column', margin: 20, gap: 10 }}>

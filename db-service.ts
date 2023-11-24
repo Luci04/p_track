@@ -55,11 +55,11 @@ export const deleteNote = async (id: number) => {
     await db.executeSql(deleteQuery);
 };
 
-export const readData = async () => {
-    const query = `SELECT * FROM ${tableName}`;
+export const readData = async (date: string) => {
+    const query = `SELECT * FROM ${tableName} where date = ?`;
 
     try {
-        const [results] = await db.executeSql(query);
+        const [results] = await db.executeSql(query, [date]);
         const rawData = results.rows.raw();
         return rawData;
     } catch (error) {
@@ -69,7 +69,7 @@ export const readData = async () => {
 };
 
 export const getNote = async (targetDate: string) => {
-    const query = `SELECT * FROM ${tableName} WHERE date = ?`;
+    const query = `SELECT * FROM ${tableName}`;
 
     try {
         const [results] = await db.executeSql(query, [targetDate]);

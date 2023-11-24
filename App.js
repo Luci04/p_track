@@ -10,8 +10,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import BottomNavigator from './navigations/BottomNavigator';
 import { PaperProvider } from 'react-native-paper';
 import { UserContext, UserProvider } from './context/UserContext';
-import { createTable, getDBConnection, readData, readNote, saveNote } from './db-service'
-// import FingerprintScanner from 'react-native-fingerprint-scanner';
 import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
 import { BackHandler } from 'react-native';
 import notifee from '@notifee/react-native';
@@ -19,21 +17,10 @@ import moment from 'moment';
 
 export default function App() {
 
-  const loadDataCallback = useCallback(async () => {
-    try {
-      const db = await getDBConnection();
-      await createTable(db);
-
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
 
   async function onDisplayNotification() {
 
     try {
-
-
       // Request permissions (required for iOS)
       await notifee.requestPermission()
 
@@ -61,11 +48,9 @@ export default function App() {
     }
   }
 
-  useEffect(() => {
-    loadDataCallback()
-    onDisplayNotification();
-  }, [loadDataCallback])
-
+  // useEffect(() => {
+  //   onDisplayNotification();
+  // }, [])
 
   return (
     <NavigationContainer>

@@ -109,30 +109,29 @@ const BottomNavigator = () => {
         })
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        setAuthenticated(false);
+    //     setAuthenticated(false);
+    //     rnBiometrics
+    //         .simplePrompt({ promptMessage: 'Confirm fingerprint' })
+    //         .then((resultObject) => {
+    //             const { success } = resultObject
 
-        rnBiometrics
-            .simplePrompt({ promptMessage: 'Confirm fingerprint' })
-            .then((resultObject) => {
-                const { success } = resultObject
+    //             if (success) {
+    //                 console.log('successful biometrics provided')
+    //                 setAuthenticated(true)
+    //             } else {
+    //                 BackHandler.exitApp();
+    //                 console.log('user cancelled biometric prompt')
+    //             }
+    //         })
+    //         .catch(() => {
+    //             BackHandler.exitApp();
+    //             console.log('biometrics failed')
 
-                if (success) {
-                    console.log('successful biometrics provided')
-                    setAuthenticated(true)
-                } else {
-                    BackHandler.exitApp();
-                    console.log('user cancelled biometric prompt')
-                }
-            })
-            .catch(() => {
-                BackHandler.exitApp();
-                console.log('biometrics failed')
+    //         })
 
-            })
-
-    }, [])
+    // }, [])
 
     return (<SafeView style={{ opacity: (authenticated ? 1 : 0) }}>
         <Tab.Navigator
