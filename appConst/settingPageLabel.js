@@ -1,7 +1,11 @@
 import { ShareInfo, onCreateTriggerNotification } from "../utility/helperFunction";
 
-export default {
-  "My Cycle": {
+const navigation = () => {
+
+}
+
+export default [
+  {
     "title": "My Cycle",
     "iconName": "water-drop",
     "iconCommunity": "MaterialIcons",
@@ -17,7 +21,7 @@ export default {
       }
     ]
   },
-  "Reminders": {
+  {
     "title": "Reminders",
     "iconName": "bell",
     "iconCommunity": "Entypo",
@@ -26,7 +30,10 @@ export default {
         "title": "Cyde reminders"
       },
       {
-        "title": "Medicine reminder"
+        "title": "Medicine reminder",
+        "onClick": (navigatFunction) => {
+          navigatFunction();
+        }
       },
       {
         "title": "Contraception reminders"
@@ -45,7 +52,7 @@ export default {
       }
     ]
   },
-  "Personal": {
+  {
     "title": "Personal",
     "iconName": "face-woman-shimmer-outline",
     "iconCommunity": "MaterialCommunityIcons",
@@ -70,7 +77,7 @@ export default {
       }
     ]
   },
-  "My Data": {
+  {
     "title": "My Data",
     "iconName": "database",
     "iconCommunity": "Octicons",
@@ -86,37 +93,31 @@ export default {
       }
     ]
   },
-  "Other": {
+  {
     "title": "Other",
     "iconName": "setting",
     "iconCommunity": "AntDesign",
-    "children": {
-
-      "Upgrade to Premium": {
+    "children": [
+      {
         "title": "Upgrade to Premium"
       },
-      "Remove ads":
       {
         "title": "Remove ads"
       },
-      "Share with friends":
       {
         "title": "Share with friends",
         onClick: ShareInfo
       },
-      "Security":
       {
         "title": "Security",
         onClick: onCreateTriggerNotification
       },
-      "Privacy":
       {
         "title": "Privacy"
       },
-      "Rate app":
       {
         "title": "Rate app"
       }
-    }
+    ]
   }
-}
+]

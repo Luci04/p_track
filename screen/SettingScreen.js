@@ -8,6 +8,8 @@ import { Divider } from 'react-native-paper'
 import Share from 'react-native-share';
 import { ShareInfo } from '../utility/helperFunction'
 import notifee, { TriggerType } from '@notifee/react-native'
+import { useNavigation } from '@react-navigation/native'
+
 
 const Header = () => {
     return <View>
@@ -16,6 +18,9 @@ const Header = () => {
 }
 
 const RenderItem = ({ item, index }) => {
+
+    const navigate = useNavigation();
+
     return <View>
         <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', paddingVertical: index != 0 ? 20 : 0 }}>
             <IconComponent iconName={item.iconName} iconType={item.iconCommunity} color={colors.lightBlue} size={15} />
@@ -25,7 +30,11 @@ const RenderItem = ({ item, index }) => {
             {
                 item.children.map((ele, index) => {
                     return <View key={ele.title}>
-                        <TouchableOpacity >
+                        <TouchableOpacity onPress={() => {
+                            ele?.onClick(() => {
+                                navigate.navigate("MedicineRemainder")
+                            })
+                        }} >
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 17 }}>
                                 <Text style={{ color: colors.black, fontFamily: 'Inter-Regular' }}>{ele.title}</Text>
                                 <IconComponent iconName={'right'} iconType={'AntDesign'} color={colors.lightBlue} size={12} />
@@ -43,18 +52,18 @@ const RenderItem = ({ item, index }) => {
 const SettingScreen = () => {
     return (
         <SafeView>
-            {/* <FlatList
+            <FlatList
                 ListHeaderComponent={Header}
                 contentContainerStyle={{
                     paddingLeft: 20,
                     paddingRight: 20,
                 }}
-                data={SettingJSON}
+                data={IconsInfo}
                 key={(item) => item.title}
                 renderItem={({ item, index }) => <RenderItem item={item} index={index} />}
                 ListFooterComponent={() => <View style={{ padding: 40 }}></View>}
-            /> */}
-            <View style={{
+            />
+            {/* <View style={{
                 paddingLeft: 20,
                 paddingRight: 20,
             }}>
@@ -95,7 +104,7 @@ const SettingScreen = () => {
                     </View>
                 </View>
 
-            </View>
+            </View> */}
 
         </SafeView >
     )

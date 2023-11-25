@@ -1,19 +1,16 @@
 import React, { useCallback, useContext, useEffect, useRef } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import SettingScreen from '../screen/SettingScreen';
 import IconComponent from '../components/IconComponent/IconComponent';
 import { BackHandler, StyleSheet, TouchableOpacity, View } from 'react-native';
-import uuid from 'react-native-uuid'
 import { colors } from '../theme/styles';
-import CalenderScreen from '../screen/CalenderScreen';
 import StatsScreen from '../screen/StatsScreen';
-import PremiumScreen from '../screen/PremiumScreen';
 import * as Animatable from 'react-native-animatable';
 import PremiumStackNavigator from './PremiumStackNavigator';
 import CalenderScreenNavigator from './CalenderScreenNavigator';
 import SafeView from '../components/SafeView/SafeView';
 import { UserContext } from '../context/UserContext';
 import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics';
+import SettingNavigator from './SettingNavigator';
 
 
 const Tab = createBottomTabNavigator();
@@ -46,7 +43,7 @@ const TabArr = [
     {
         name: 'Setting',
         label: 'Setting',
-        component: SettingScreen,
+        component: SettingNavigator,
         iconFamily: 'Ionicons',
         iconName: 'settings-outline',
         activeIcon: 'settings'
