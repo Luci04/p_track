@@ -11,7 +11,7 @@ export default [
     "iconCommunity": "MaterialIcons",
     "children": [
       {
-        "title": "Pericxi prediction"
+        "title": "Period prediction"
       },
       {
         "title": "Ovulation and fertility prediction"
@@ -27,29 +27,50 @@ export default [
     "iconCommunity": "Entypo",
     "children": [
       {
-        "title": "Cyde reminders"
+        "title": "Cycle reminder",
+        "onClick": (navigatFunction) => {
+          navigatFunction();
+        },
+        "Screen": "Cycle Remainder"
       },
       {
         "title": "Medicine reminder",
         "onClick": (navigatFunction) => {
           navigatFunction();
-        }
+        },
+        "Screen": "Medicine Remainder"
       },
       {
-        "title": "Contraception reminders"
+        "title": "Contraception reminder",
+        "onClick": (navigatFunction) => {
+          navigatFunction();
+        },
+        "Screen": "Contraception Remainder"
       },
       {
-        "title": "Meditation remainder"
+        "title": "Meditation remainder",
+        "onClick": (navigatFunction) => {
+          navigatFunction();
+        },
+        "Screen": "Meditation Remainder"
       },
       {
-        "title": "Daily logging remainder"
+        "title": "Daily logging remainder",
+        "onClick": (navigatFunction) => {
+          navigatFunction();
+        },
+        "Screen": "Daily Logging Remainder"
       },
       {
-        "title": "Tracking remainders"
+        "title": "Tracking remainder",
+        "onClick": (navigatFunction) => {
+          navigatFunction();
+        },
+        "Screen": "Tracking Remainder"
       },
-      {
-        "title": "Secret reminders"
-      }
+      // {
+      //   "title": "Secret reminders"
+      // }
     ]
   },
   {

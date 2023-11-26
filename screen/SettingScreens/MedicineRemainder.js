@@ -1,9 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Switch } from 'react-native-paper';
+import { Divider, Switch } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 import { getDataItem, storeDataItem } from '../../utility/storage';
+import notifee, { TimestampTrigger, TriggerType } from '@notifee/react-native';
+import { colors } from '../../theme/styles';
 
 const MedicineRemainder = () => {
 
@@ -11,14 +13,57 @@ const MedicineRemainder = () => {
 
     const [selectedTime, setSelectedTime] = React.useState(null);
 
-    const getvar = async () => {
-        const data = await getDataItem('MedicineRemainderTime')
+    async function onCreateTriggerNotification(time) {
 
-        setSelectedTime(data);
+        const date = new Date();
+        date.setHours(Number(time[0]));
+        date.setMinutes(Number(time[1]));
+
+        const trigger = {
+            type: TriggerType.TIMESTAMP,
+            repeatType:'day' ,
+            timestamp: date.getTime(), // Trigger the notification after 1 minute
+          };
+        
+          console.log(date.getTime());
+      
+        // Create a trigger notification
+        await notifee.createTriggerNotification({
+          title: "It's Time for Your Medicine",
+          body: `Don't forget to take your medication on time.`,
+          android: {
+            channelId: 'MedicineRemainderNotification',
+            pressAction: {
+                id: 'default'
+            }
+          }
+        }, trigger);
+      }
+
+    const getvar = async () => {
+        const data = await getDataItem('MedicineRemainderNotification')
+
+        if(data){
+            setSelectedTime(data);
+            setIsSwitchOn(true);
+        }else{
+            setSelectedTime(null);
+            setIsSwitchOn(false);
+        }
     }
 
 
-    const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+    const onToggleSwitch =async (data) => {
+        console.log(data);
+        if(data){
+            console.log("Date Picker")
+            showDatePicker();
+        }else{
+            console.log("Notification Canclled")
+            await notifee.deleteChannel('MedicineRemainderNotification');
+        }
+        setIsSwitchOn(data);
+    }
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -30,9 +75,15 @@ const MedicineRemainder = () => {
         setDatePickerVisibility(false);
     };
 
-    const handleConfirm = (date) => {
-        const time = moment(date).format('LT');
-        storeDataItem('MedicineRemainderTime', time);
+    const handleConfirm = async(date) => {
+        const time = moment(date).format('HH:mm').split(':');
+        console.log(time)
+        storeDataItem('MedicineRemainderNotification', moment(date).format('LT'));
+        const channelId = await notifee.createChannel({
+            id: 'MedicineRemainderNotification',
+            name: 'Default Channel',
+          });
+        await onCreateTriggerNotification(time);
         setSelectedTime(time)
         hideDatePicker();
     };
@@ -41,23 +92,28 @@ const MedicineRemainder = () => {
         getvar();
     }, [selectedTime])
 
-
-
     return (
         <View style={styles.containerStyle}>
             <View style={styles.optionContainer}>
-                <Text style={{ color: "black" }}>Notication</Text>
-                <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
-            </View>
-            <TouchableOpacity onPress={showDatePicker}>
-                <View style={styles.optionContainer}>
-                    <Text style={{ color: "black" }}>Time</Text>
-                    <Text style={{ color: "black" }}>
-                        {
-                            selectedTime ? selectedTime : "09:00 AM"
-                        }</Text>
+                <View style={styles.rowContainer}>
+                <Text style={styles.optionTitle}>Medicine Remainder</Text>
+                <Text style={styles.optionSubtitle}>Remind me to take my medicine on time</Text>
                 </View>
-            </TouchableOpacity>
+                <Switch thumbColor={colors.primary} color={colors.primaryLight} value={isSwitchOn} onValueChange={onToggleSwitch} />
+            </View>
+            <Divider style={{backgroundColor:colors.darkGrey,height:0.5}} />
+            
+            {
+                isSwitchOn ?  <TouchableOpacity disabled={!isSwitchOn} onPress={showDatePicker}>
+                <View style={styles.optionContainer}>
+                    <Text style={styles.optionTitle}>Time</Text>    
+                    <Text style={{ color: "black" }}>
+                         {selectedTime? selectedTime : "09:00 AM" }
+                    </Text>
+                </View>
+            </TouchableOpacity>: null
+            }
+           
 
 
             <DateTimePickerModal
@@ -79,6 +135,22 @@ const styles = StyleSheet.create({
     optionContainer: {
         justifyContent: 'space-between',
         flexDirection: 'row'
+    },
+    optionContainer:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        paddingHorizontal:15,
+        paddingVertical:15
+    },
+    optionTitle:{
+        fontSize:16,
+        color:colors.black,
+        fontFamily:'Inter-Medium'
+    },
+    optionSubtitle:{
+        fontSize:14,
+        color:colors.darkGrey,
+        fontFamily:'Inter-Regular',
     }
 
 })
