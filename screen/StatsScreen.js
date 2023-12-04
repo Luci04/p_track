@@ -1,4 +1,4 @@
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View, findNodeHandle } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View, findNodeHandle, TextInput } from 'react-native'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import SafeView from '../components/SafeView/SafeView'
 import { colors } from '../theme/styles'
@@ -9,7 +9,7 @@ import { UserContext } from '../context/UserContext';
 import { openDatabase } from 'react-native-sqlite-storage';
 import { useNavigation } from '@react-navigation/native';
 
-var db = openDatabase({ name: 'DatabaseName5.db' });
+var db = openDatabase({ name: 'DatabaseName6.db' });
 
 const StatsScreen = ({ route }) => {
 
@@ -26,8 +26,10 @@ const StatsScreen = ({ route }) => {
     const [customDatesStyles, setCustomDatesStyles] = useState([]);
     const [isPeriodDay, setIsPeriodDay] = useState(false);
     const [nthePeriodDay, setNthPeriodDay] = useState(0);
-    const [currentStartDate, setCurrentStartDate] = useState(moment().format('YYYY-MM-DD'))
+    // const [selectedDate, setCurrentStartDate] = useState(moment().format('YYYY-MM-DD'))
     const [selectedDate, setSelectedDate] = useState(monitorDate ? monitorDate : moment().format('YYYY-MM-DD'))
+    const [note, setNote] = useState(null)
+
     const prevObject = useRef({});
     //ScrollView Refs
     const scroll1 = useRef(null)
@@ -64,7 +66,7 @@ const StatsScreen = ({ route }) => {
 
         if (markedPeriodDate?.length) {
 
-            let currentStartDate = markedPeriodDate[0];
+            let selectedDate = markedPeriodDate[0];
             let length = 1;
 
             for (let i = 0; i < markedPeriodDate.length; i++) {
@@ -76,8 +78,8 @@ const StatsScreen = ({ route }) => {
                 if (formattedNextDate === markedPeriodDate[i + 1]) {
                     length++;
                 } else {
-                    result.push({ startDate: currentStartDate, length: length });
-                    currentStartDate = markedPeriodDate[i + 1];
+                    result.push({ startDate: selectedDate, length: length });
+                    selectedDate = markedPeriodDate[i + 1];
                     length = 1;
                 }
             }
@@ -265,7 +267,7 @@ const StatsScreen = ({ route }) => {
                     if (res.rows.length == 0) {
                         txn.executeSql('DROP TABLE IF EXISTS table_user', []);
                         txn.executeSql(
-                            `CREATE TABLE IF NOT EXISTS table_user(id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR(20) UNIQUE, sexualActivity VARCHAR(2), symptomsActivity VARCHAR(2), moods VARCHAR(2), contraception VARCHAR(2))`,
+                            `CREATE TABLE IF NOT EXISTS table_user(id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR(20) UNIQUE, sexualActivity VARCHAR(2), symptomsActivity VARCHAR(2), moods VARCHAR(2), contraception VARCHAR(2),notes TEXT)`,
                             []
                         );
                     } else {
@@ -278,13 +280,13 @@ const StatsScreen = ({ route }) => {
     }, [])
 
     const saveData = () => {
-
+        console.log(note);
         db.transaction((txn) => {
             try {
                 console.log("Inserting data into table_user...");
                 txn.executeSql(
-                    `INSERT OR REPLACE INTO table_user (date, sexualActivity, symptomsActivity, moods, contraception) VALUES (?, ?, ?, ?, ?)`,
-                    [selectedDate, selectedOptions['Sexual Activity'], selectedOptions['Symptoms Activity'], selectedOptions['Moods'], selectedOptions['Contraception']],
+                    `INSERT OR REPLACE INTO table_user (date, sexualActivity, symptomsActivity, moods, contraception,notes) VALUES (?, ?, ?, ?, ?, ?)`,
+                    [selectedDate, selectedOptions['Sexual Activity'], selectedOptions['Symptoms Activity'], selectedOptions['Moods'], selectedOptions['Contraception'], note],
                     (tx, results) => {
                         console.log("Rows affected:", results.rowsAffected);
                         if (results.rowsAffected > 0) {
@@ -304,7 +306,7 @@ const StatsScreen = ({ route }) => {
 
         db.transaction((txn) => {
             try {
-                console.log("Showing data into table_user...");
+                console.log("Showing data into table_user...", note);
                 txn.executeSql(
                     `SELECT * FROM table_user where date = ?`,
                     [date],
@@ -320,6 +322,7 @@ const StatsScreen = ({ route }) => {
                                 "Moods": temp[0].moods,
                                 "Contraception": temp[0].contraception,
                             })
+                            setNote(temp[0]?.notes);
                         } else {
                             setSelectedOptions({
                                 "Sexual Activity": null,
@@ -327,6 +330,7 @@ const StatsScreen = ({ route }) => {
                                 "Moods": null,
                                 "Contraception": null
                             })
+                            setNote(null);
                         }
                     }
                 );
@@ -360,7 +364,7 @@ const StatsScreen = ({ route }) => {
             setNthPeriodDay(0);
         }
 
-    }, [currentStartDate])
+    }, [selectedDate])
 
 
 
@@ -646,6 +650,31 @@ const StatsScreen = ({ route }) => {
                         </ScrollView>
                     </View>
 
+                    <View style={{ gap: 5, paddingVertical: 10 }} >
+                        <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
+                            <Text style={{ color: '#000' }}>{"Notes"}</Text>
+                        </View>
+                        <TextInput
+                            style={{
+                                borderWidth: 1, borderColor: '#bfbfbf', borderRadius: 10, height: 100, color: '#000', margin: 0, padding: 0, paddingHorizontal: 10, paddingVertical: 5,
+                                fontSize: 18,
+                                textAlignVertical: 'top', // Align vertically to the top
+                                textAlign: 'left', // Align text to the left
+                            }}
+                            multiline
+                            numberOfLines={4}
+                            value={note}
+                            placeholder='Notes'
+                            placeholderTextColor={'#bfbfbf'}
+                            onChangeText={(text) => {
+                                console.log(text);
+                                setNote(text);
+                            }}
+                        >
+                        </TextInput>
+
+                    </View>
+
                     {
                         saveOptionVisible ? <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 20 }}>
                             <TouchableOpacity
@@ -676,7 +705,7 @@ const StatsScreen = ({ route }) => {
                     }
                 </View>
             </ScrollView>
-        </SafeView>
+        </SafeView >
     )
 }
 
