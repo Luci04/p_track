@@ -1,12 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { Calendar } from 'react-native-calendars';
-import MonthMapping from '../appConst/monthMapping.json'
-import { colors } from '../theme/styles';
-import IconComponent from '../components/IconComponent/IconComponent';
-import SafeView from '../components/SafeView/SafeView';
+import MonthMapping from '../../appConst/monthMapping.json'
+import { colors } from '../../theme/styles';
+import IconComponent from '../../components/IconComponent/IconComponent';
+import SafeView from '../../components/SafeView/SafeView';
 import moment from 'moment'
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 
 const CalenderScreen = ({ navigation }) => {
 
@@ -317,6 +317,14 @@ const CalenderScreen = ({ navigation }) => {
             }}>
                 <View style={{ padding: 15, borderColor: colors.borderColor, borderWidth: 1, borderRadius: 8, flexDirection: 'column', margin: 20, gap: 10 }}>
                     <Text style={{ color: colors.black, textAlign: 'center' }}>Edit periods dates</Text>
+                </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('MeditationScreen')
+            }}>
+                <View style={{ padding: 15, borderColor: colors.borderColor, borderWidth: 1, borderRadius: 8, flexDirection: 'column', margin: 20, gap: 10 }}>
+                    <Text style={{ color: colors.black, textAlign: 'center' }}>Meditation Time</Text>
                 </View>
             </TouchableOpacity>
         </SafeView >

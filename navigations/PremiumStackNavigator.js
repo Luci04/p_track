@@ -13,7 +13,8 @@ const PremiumStackNavigator = () => {
                 headerShown: false,
                 animationTypeForReplace: 'push'
             }}>
-            <Stack.Screen name="PremiumScreen" component={PremiumScreen} />
+            <Stack.Screen name="PremiumScreen"
+                component={PremiumScreen} />
         </Stack.Navigator>
     )
 }

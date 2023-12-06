@@ -4,7 +4,7 @@ import { Divider, Switch } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 import { getDataItem, storeDataItem } from '../../utility/storage';
-import notifee, { TimestampTrigger, TriggerType } from '@notifee/react-native';
+import notifee, { TimestampTrigger, TriggerType, RepeatFrequency } from '@notifee/react-native';
 import { colors } from '../../theme/styles';
 
 const MedicineRemainder = () => {
@@ -16,49 +16,55 @@ const MedicineRemainder = () => {
     async function onCreateTriggerNotification(time) {
 
         const date = new Date();
+        const today = new Date();
+
+        if (date < today) {
+            date.setDate(date.getDate() + 1);
+        }
+
         date.setHours(Number(time[0]));
         date.setMinutes(Number(time[1]));
 
         const trigger = {
             type: TriggerType.TIMESTAMP,
-            repeatType:'day' ,
+            repeatType: RepeatFrequency.HOURLY,
             timestamp: date.getTime(), // Trigger the notification after 1 minute
-          };
-        
-          console.log(date.getTime());
-      
+        };
+
+        console.log(date.getTime());
+
         // Create a trigger notification
         await notifee.createTriggerNotification({
-          title: "It's Time for Your Medicine",
-          body: `Don't forget to take your medication on time.`,
-          android: {
-            channelId: 'MedicineRemainderNotification',
-            pressAction: {
-                id: 'default'
+            title: "It's Time for Your Medicine",
+            body: `Don't forget to take your medication on time.`,
+            android: {
+                channelId: 'MedicineRemainderNotification',
+                pressAction: {
+                    id: 'default'
+                }
             }
-          }
         }, trigger);
-      }
+    }
 
     const getvar = async () => {
         const data = await getDataItem('MedicineRemainderNotification')
 
-        if(data){
+        if (data) {
             setSelectedTime(data);
             setIsSwitchOn(true);
-        }else{
+        } else {
             setSelectedTime(null);
             setIsSwitchOn(false);
         }
     }
 
 
-    const onToggleSwitch =async (data) => {
+    const onToggleSwitch = async (data) => {
         console.log(data);
-        if(data){
+        if (data) {
             console.log("Date Picker")
             showDatePicker();
-        }else{
+        } else {
             console.log("Notification Canclled")
             await notifee.deleteChannel('MedicineRemainderNotification');
         }
@@ -72,17 +78,18 @@ const MedicineRemainder = () => {
     };
 
     const hideDatePicker = () => {
+        setIsSwitchOn(false);
         setDatePickerVisibility(false);
     };
 
-    const handleConfirm = async(date) => {
+    const handleConfirm = async (date) => {
         const time = moment(date).format('HH:mm').split(':');
         console.log(time)
         storeDataItem('MedicineRemainderNotification', moment(date).format('LT'));
         const channelId = await notifee.createChannel({
             id: 'MedicineRemainderNotification',
             name: 'Default Channel',
-          });
+        });
         await onCreateTriggerNotification(time);
         setSelectedTime(time)
         hideDatePicker();
@@ -96,24 +103,24 @@ const MedicineRemainder = () => {
         <View style={styles.containerStyle}>
             <View style={styles.optionContainer}>
                 <View style={styles.rowContainer}>
-                <Text style={styles.optionTitle}>Medicine Remainder</Text>
-                <Text style={styles.optionSubtitle}>Remind me to take my medicine on time</Text>
+                    <Text style={styles.optionTitle}>Medicine Remainder</Text>
+                    <Text style={styles.optionSubtitle}>Remind me to take my medicine on time</Text>
                 </View>
                 <Switch thumbColor={colors.primary} color={colors.primaryLight} value={isSwitchOn} onValueChange={onToggleSwitch} />
             </View>
-            <Divider style={{backgroundColor:colors.darkGrey,height:0.5}} />
-            
+            <Divider style={{ backgroundColor: colors.darkGrey, height: 0.5 }} />
+
             {
-                isSwitchOn ?  <TouchableOpacity disabled={!isSwitchOn} onPress={showDatePicker}>
-                <View style={styles.optionContainer}>
-                    <Text style={styles.optionTitle}>Time</Text>    
-                    <Text style={{ color: "black" }}>
-                         {selectedTime? selectedTime : "09:00 AM" }
-                    </Text>
-                </View>
-            </TouchableOpacity>: null
+                isSwitchOn ? <TouchableOpacity disabled={!isSwitchOn} onPress={showDatePicker}>
+                    <View style={styles.optionContainer}>
+                        <Text style={styles.optionTitle}>Time</Text>
+                        <Text style={{ color: "black" }}>
+                            {selectedTime ? selectedTime : "09:00 AM"}
+                        </Text>
+                    </View>
+                </TouchableOpacity> : null
             }
-           
+
 
 
             <DateTimePickerModal
@@ -133,89 +140,20 @@ const styles = StyleSheet.create({
         flex: 1
     },
     optionContainer: {
+        flexDirection: 'row',
         justifyContent: 'space-between',
-        flexDirection: 'row'
+        paddingHorizontal: 15,
+        paddingVertical: 15
     },
-    optionContainer:{
-        flexDirection:'row',
-        justifyContent:'space-between',
-        paddingHorizontal:15,
-        paddingVertical:15
+    optionTitle: {
+        fontSize: 16,
+        color: colors.black,
+        fontFamily: 'Inter-Medium'
     },
-    optionTitle:{
-        fontSize:16,
-        color:colors.black,
-        fontFamily:'Inter-Medium'
-    },
-    optionSubtitle:{
-        fontSize:14,
-        color:colors.darkGrey,
-        fontFamily:'Inter-Regular',
+    optionSubtitle: {
+        fontSize: 14,
+        color: colors.darkGrey,
+        fontFamily: 'Inter-Regular',
     }
 
 })
-
-// import React, { useState, useEffect } from 'react';
-// import BackgroundTask from
- 
-// 'react-native-background-task';
-// import PushNotification from
- 
-// 'react-native-push-notification';
-
-// const Reminder = () => {
-//   const [isReminderEnabled, setIsReminderEnabled] = useState(false); // Track reminder status
-
-//   useEffect(() => {
-//     // Check if reminder is enabled in AsyncStorage
-//     const loadReminderSettings = async () => {
-//       const reminderSettings = await AsyncStorage.getItem('reminderSettings');
-//       if (reminderSettings) {
-//         const isReminderEnabled = reminderSettings.isReminderEnabled;
-//         setIsReminderEnabled(isReminderEnabled);
-//       }
-//     };
-//     loadReminderSettings();
-
-//     // Set up background task
-//     BackgroundTask.register({
-//       taskId: 'reminderCheck',
-//       delay: 60000, // Check every minute
-//       onStart: async () => {
-//         // Check if reminder is enabled before proceeding
-//         if (isReminderEnabled) {
-//           // Check reminder time and trigger notification
-//           const currentDate = new Date();
-//           const reminderTime = new Date('09:00'); // Set reminder time to 9:00 AM
-//           if (currentDate.getTime() === reminderTime.getTime()) {
-//             PushNotification.localNotification({
-//               title: 'Reminder',
-//               message: 'Your daily reminder is here!',
-//             });
-//           }
-//         }
-
-//         BackgroundTask.finish();
-//       },
-//     });
-//   }, [isReminderEnabled]);
-
-//   const toggleReminder = () => {
-//     setIsReminderEnabled((prevState) => !prevState); // Toggle reminder state
-
-//     // Update reminder settings in AsyncStorage
-//     const updateReminderSettings = async () => {
-//       await AsyncStorage.setItem('reminderSettings', {
-//         isReminderEnabled: isReminderEnabled,
-//       });
-//     };
-//     updateReminderSettings();
-//   };
-
-//   return (
-//     <View>
-//       <Text>Daily Reminder</Text>
-//       <Switch value={isReminderEnabled} onValueChange={toggleReminder} />
-//     </View>
-//   );
-// };
