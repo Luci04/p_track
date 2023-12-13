@@ -9,6 +9,8 @@ import ContraceptionRemainder from '../screen/SettingScreens/ContraceptionRemain
 import MeditationRemainder from '../screen/SettingScreens/MeditationRemainder';
 import DailyLoggingRemainder from '../screen/SettingScreens/DailyLoggingRemainder';
 import TrackingRemainder from '../screen/SettingScreens/TrackingRemainder';
+import SecureAccessScreen from '../screen/SettingScreens/SecureAccessScreen';
+import YourNameScreen from '../screen/SettingScreens/YourNameScreen';
 
 
 const Stack = createStackNavigator();
@@ -33,6 +35,10 @@ const SettingNavigator = () => {
             <Stack.Screen name="Meditation Remainder" options={{ headerShown: true }} component={MeditationRemainder} />
             <Stack.Screen name="Daily Logging Remainder" options={{ headerShown: true }} component={DailyLoggingRemainder} />
             <Stack.Screen name="Tracking Remainder" options={{ headerShown: true }} component={TrackingRemainder} />
+
+            <Stack.Screen name="Secure Accesss" options={{ headerShown: true }} component={SecureAccessScreen} />
+            <Stack.Screen name="Your Name Screen" options={{ headerShown: true, title: "Your Name" }} component={YourNameScreen} />
+
         </Stack.Navigator>
     )
 }

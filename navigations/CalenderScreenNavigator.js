@@ -15,7 +15,8 @@ const CalenderScreenNavigator = () => {
             screenOptions={{
                 animationEnabled: true,
                 headerShown: false,
-                animationTypeForReplace: 'push'
+                animationTypeForReplace: 'push',
+                headerShadowVisible: false
             }}
             initialRouteName='CalenderScreen'
         >

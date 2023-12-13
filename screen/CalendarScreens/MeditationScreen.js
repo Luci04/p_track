@@ -112,7 +112,7 @@ const MeditationScreen = ({ navigation }) => {
 
             {
                 step == 2 && <>
-                    <LottieView style={{ width, height: 340 }} source={require('../../assets/lottie/girl-meditating.json')} autoPlay loop />
+                    <LottieView p style={{ width, height: 340 }} source={require('../../assets/lottie/girl-meditating.json')} autoPlay loop />
                     <TimerHook seconds={selected * 5 * 60} onEnd={handleTimeEnd} />
                     {
                         showExitButton && <Animatable.View animation="fadeIn" iterationCount={1} >
@@ -128,7 +128,6 @@ const MeditationScreen = ({ navigation }) => {
                             </TouchableOpacity>
                         </Animatable.View>
                     }
-
                 </>
             }
 

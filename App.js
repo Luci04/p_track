@@ -14,6 +14,7 @@ import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
 import { BackHandler } from 'react-native';
 import moment from 'moment';
 import notifee, { EventType } from '@notifee/react-native';
+import MainNavigator from './navigations/MainNavigator';
 
 export default function App() {
 
@@ -29,11 +30,12 @@ export default function App() {
   //   onDisplayNotification();
   // }, [])
 
+
   return (
     <NavigationContainer>
       <PaperProvider>
         <UserProvider>
-          <BottomNavigator />
+          <MainNavigator />
         </UserProvider>
       </PaperProvider>
     </NavigationContainer>

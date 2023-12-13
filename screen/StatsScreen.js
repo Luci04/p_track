@@ -40,7 +40,7 @@ const StatsScreen = ({ route }) => {
 
     const [saveOptionVisible, setSaveOptionVisible] = useState(false);
 
-    const { periodStart, setPeriodStart, markedPeriodDate, DateHistory, setDateHistory } = useContext(UserContext);
+    const { periodStart, setPeriodStart, markedPeriodDate, DateHistory, setDateHistory, UserName } = useContext(UserContext);
 
     function compareDates(dateString1, dateString2) {
         const date1 = new Date(dateString1);
@@ -507,7 +507,7 @@ const StatsScreen = ({ route }) => {
                             isPeriodDay ? <>
                                 <Text style={styles.heading}>Period</Text>
                                 <Text style={styles.heading}>day {nthePeriodDay}</Text>
-                                <Text style={styles.desc}>Hey Christa.How are you feeling today?</Text>
+                                <Text style={styles.desc}>Hey {UserName?.trim()},How are you feeling today?</Text>
                             </>
                                 : null
                         }

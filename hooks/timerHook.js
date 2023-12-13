@@ -1,9 +1,19 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 const TimerHook = ({ seconds, onEnd }) => {
 
     const [totalTime, setTotalTime] = useState(seconds);
+
+    const formattedTime = useMemo(() => {
+        const minutes = Math.floor(totalTime / 60);
+        const seconds = totalTime % 60;
+
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        const formattedSeconds = String(seconds).padStart(2, '0');
+
+        return `${formattedMinutes}:${formattedSeconds}`;
+    }, [totalTime]);
 
     useEffect(() => {
         const timerId = setInterval(() => {
@@ -33,7 +43,7 @@ const TimerHook = ({ seconds, onEnd }) => {
 
     return (
         <View>
-            <Text>{totalTime}</Text>
+            <Text>{formattedTime}</Text>
         </View>
     );
 };

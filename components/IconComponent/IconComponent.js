@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -17,6 +18,7 @@ const IconComponent = ({ iconType, iconName, size, color }) => {
     // Map the iconType to the appropriate icon library
     const Icon = {
         'AntDesign': AntDesign,
+        'EvilIcons': EvilIcons,
         'Entypo': Entypo,
         'Feather': Feather,
         'FontAwesome': FontAwesome,

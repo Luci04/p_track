@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Divider, Switch } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
-import { getDataItem, storeDataItem } from '../../utility/storage';
+import { getDataItem, removeValue, storeDataItem } from '../../utility/storage';
 import notifee, { TimestampTrigger, TriggerType, RepeatFrequency } from '@notifee/react-native';
 import { colors } from '../../theme/styles';
 
@@ -65,8 +65,9 @@ const MedicineRemainder = () => {
             console.log("Date Picker")
             showDatePicker();
         } else {
-            console.log("Notification Canclled")
+            console.log("Notification Cancelled")
             await notifee.deleteChannel('MedicineRemainderNotification');
+            await removeValue('MedicineRemainderNotification');
         }
         setIsSwitchOn(data);
     }
@@ -88,7 +89,7 @@ const MedicineRemainder = () => {
         storeDataItem('MedicineRemainderNotification', moment(date).format('LT'));
         const channelId = await notifee.createChannel({
             id: 'MedicineRemainderNotification',
-            name: 'Default Channel',
+            name: 'Default Channel'
         });
         await onCreateTriggerNotification(time);
         setSelectedTime(time)

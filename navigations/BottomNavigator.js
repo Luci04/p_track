@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import IconComponent from '../components/IconComponent/IconComponent';
 import { BackHandler, StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -11,6 +11,7 @@ import SafeView from '../components/SafeView/SafeView';
 import { UserContext } from '../context/UserContext';
 import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics';
 import SettingNavigator from './SettingNavigator';
+import { getDataObject } from '../utility/storage';
 
 
 const Tab = createBottomTabNavigator();
@@ -105,30 +106,41 @@ const BottomNavigator = () => {
             }
         })
 
+    const callSecureAuth = async () => {
 
-    // useEffect(() => {
+        const data = await getDataObject('SecureAccess');
 
-    //     setAuthenticated(false);
-    //     rnBiometrics
-    //         .simplePrompt({ promptMessage: 'Confirm fingerprint' })
-    //         .then((resultObject) => {
-    //             const { success } = resultObject
+        if (data) {
+            setAuthenticated(false);
+            rnBiometrics
+                .simplePrompt({ promptMessage: 'Confirm fingerprint' })
+                .then((resultObject) => {
+                    const { success } = resultObject
 
-    //             if (success) {
-    //                 console.log('successful biometrics provided')
-    //                 setAuthenticated(true)
-    //             } else {
-    //                 BackHandler.exitApp();
-    //                 console.log('user cancelled biometric prompt')
-    //             }
-    //         })
-    //         .catch(() => {
-    //             BackHandler.exitApp();
-    //             console.log('biometrics failed')
+                    if (success) {
+                        console.log('successful biometrics provided')
+                        setAuthenticated(true)
+                    } else {
+                        BackHandler.exitApp();
+                        console.log('user cancelled biometric prompt')
+                    }
+                })
+                .catch(() => {
+                    BackHandler.exitApp();
+                    console.log('biometrics failed')
 
-    //         })
+                })
+        } else {
+            setAuthenticated(true);
+        }
 
-    // }, [])
+
+    }
+
+
+    useEffect(() => {
+        callSecureAuth();
+    }, [])
 
     return (<SafeView style={{ opacity: (authenticated ? 1 : 0) }}>
         <Tab.Navigator

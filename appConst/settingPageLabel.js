@@ -79,10 +79,18 @@ export default [
     "iconCommunity": "MaterialCommunityIcons",
     "children": [
       {
-        "title": "Your Name"
+        "title": "Your Name",
+        "onClick": (navigatFunction) => {
+          navigatFunction();
+        },
+        "Screen": "Your Name Screen"
       },
       {
-        "title": "Secure access (PIN)"
+        "title": "Secure access (PIN)",
+        "onClick": (navigatFunction) => {
+          navigatFunction();
+        },
+        "Screen": "Secure Accesss"
       },
       {
         "title": "Calender view"
