@@ -43,7 +43,7 @@ const TimerHook = ({ seconds, onEnd }) => {
 
     return (
         <View>
-            <Text>{formattedTime}</Text>
+            <Text style={{ fontSize: 20, color: '#fff' }}>{formattedTime}</Text>
         </View>
     );
 };

@@ -5,18 +5,19 @@ const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
 
-    const [periodStart, setPeriodStart] = useState('2023-11-04');
-    const [periodLength, setPeriodLength] = useState(6);
+    const [periodStart, setPeriodStart] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [periodLength, setPeriodLength] = useState(7);
     const [UserName, setUserName] = useState(null);
     const [periodCycle, setPeriodCycle] = useState(28);
     const [markedPeriodDate, setMarkedPeriodDate] = useState([]);
     const [DateHistory, setDateHistory] = useState({});
-    const [authenticated, setAuthenticated] = useState(true)
+    const [authenticated, setAuthenticated] = useState(false)
 
     const setAllData = async () => {
-        const name = getDataItem('YourName');
-        if (data) {
-            setUserName(data);
+        const name = await getDataItem('YourName');
+        if (name) {
+            setUserName(name);
         } else {
             setUserName(null);
         }
@@ -28,7 +29,7 @@ const UserProvider = ({ children }) => {
 
 
     return (
-        <UserContext.Provider value={{ periodStart, setPeriodStart, periodLength, periodCycle, markedPeriodDate, setMarkedPeriodDate, DateHistory, setDateHistory, authenticated, setAuthenticated, UserName, setUserName }}>
+        <UserContext.Provider value={{ periodStart, setPeriodStart, periodLength, periodCycle, markedPeriodDate, setMarkedPeriodDate, DateHistory, setDateHistory, authenticated, setAuthenticated, UserName, setUserName, loading, setLoading, setPeriodLength, setPeriodCycle }}>
             {children}
         </UserContext.Provider>
     );

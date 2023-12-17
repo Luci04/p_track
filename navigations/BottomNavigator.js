@@ -1,17 +1,17 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import IconComponent from '../components/IconComponent/IconComponent';
-import { BackHandler, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../theme/styles';
 import StatsScreen from '../screen/StatsScreen';
 import * as Animatable from 'react-native-animatable';
 import PremiumStackNavigator from './PremiumStackNavigator';
 import CalenderScreenNavigator from './CalenderScreenNavigator';
 import SafeView from '../components/SafeView/SafeView';
-import { UserContext } from '../context/UserContext';
-import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics';
 import SettingNavigator from './SettingNavigator';
-import { getDataObject } from '../utility/storage';
+import { UserContext } from '../context/UserContext';
+import OnBoardingScreen from '../screen/OnBoardingScreen/OnBoardingScreen';
+import ChartScreen from '../screen/ChartScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -88,62 +88,11 @@ const TabButton = ({ item, onPress, accessibilityState }) => {
 
 const BottomNavigator = () => {
 
-    const { setAuthenticated, authenticated } = useContext(UserContext)
-    const rnBiometrics = new ReactNativeBiometrics({ allowDeviceCredentials: true })
+    const { authenticated } = useContext(UserContext)
 
-    rnBiometrics.isSensorAvailable()
-        .then((resultObject) => {
-            const { available, biometryType } = resultObject
-
-            if (available && biometryType === BiometryTypes.TouchID) {
-                console.log('TouchID is supported')
-            } else if (available && biometryType === BiometryTypes.FaceID) {
-                console.log('FaceID is supported')
-            } else if (available && biometryType === BiometryTypes.Biometrics) {
-                console.log('Biometrics is supported')
-            } else {
-                console.log('Biometrics not supported')
-            }
-        })
-
-    const callSecureAuth = async () => {
-
-        const data = await getDataObject('SecureAccess');
-
-        if (data) {
-            setAuthenticated(false);
-            rnBiometrics
-                .simplePrompt({ promptMessage: 'Confirm fingerprint' })
-                .then((resultObject) => {
-                    const { success } = resultObject
-
-                    if (success) {
-                        console.log('successful biometrics provided')
-                        setAuthenticated(true)
-                    } else {
-                        BackHandler.exitApp();
-                        console.log('user cancelled biometric prompt')
-                    }
-                })
-                .catch(() => {
-                    BackHandler.exitApp();
-                    console.log('biometrics failed')
-
-                })
-        } else {
-            setAuthenticated(true);
-        }
-
-
-    }
-
-
-    useEffect(() => {
-        callSecureAuth();
-    }, [])
-
-    return (<SafeView style={{ opacity: (authenticated ? 1 : 0) }}>
+    return (<SafeView>
         <Tab.Navigator
+            initialRouteName='Onboarding'
             screenOptions={{
                 headerShown: false,
             }}
@@ -162,7 +111,7 @@ const BottomNavigator = () => {
                                 right: 16,
                                 borderRadius: 16,
                                 elevation: 1,
-                                display: item.label === 'Premium' ? 'none' : 'flex'
+                                display: (item.label === 'Premium' || item.label === 'Onboarding') ? 'none' : 'flex'
                             },
                             tabBarButton: (props) => <TabButton {...props} item={item} />,
                             tabBarLabel: item.label,

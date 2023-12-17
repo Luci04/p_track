@@ -29,6 +29,8 @@ const StatsScreen = ({ route }) => {
     // const [selectedDate, setCurrentStartDate] = useState(moment().format('YYYY-MM-DD'))
     const [selectedDate, setSelectedDate] = useState(monitorDate ? monitorDate : moment().format('YYYY-MM-DD'))
     const [note, setNote] = useState(null)
+    const [notedEditMode, setNotedEditMode] = useState(false)
+
 
     const prevObject = useRef({});
     //ScrollView Refs
@@ -250,7 +252,6 @@ const StatsScreen = ({ route }) => {
 
     useEffect(() => {
         if (!shallowCompare(selectedOptions, prevObject.current)) {
-            setSaveOptionVisible(true)
             scrollToElement();
         }
 
@@ -340,6 +341,7 @@ const StatsScreen = ({ route }) => {
         });
 
         setSelectedDate(date);
+        setSaveOptionVisible(false);
     }
 
     useEffect(() => {
@@ -385,6 +387,8 @@ const StatsScreen = ({ route }) => {
         if (selectedOptions["Contraception"]) {
             scroll4.current.scrollTo({ x: 0, y: (60 * (selectedOptions["Contraception"] - 48)) + (selectedOptions["Contraception"] - 48 + 1 > 1 ? 5 * (selectedOptions["Contraception"] - 48 + 1) : 0), animated: true });
         }
+
+        setSaveOptionVisible(true)
     };
 
     // const scrollToIfSelected = () => {
@@ -420,8 +424,14 @@ const StatsScreen = ({ route }) => {
     }
 
     useEffect(() => {
-        showData(monitorDate || selectedDate);
-    }, [selectedDate, monitorDate])
+        setSelectedDate(monitorDate)
+    }, [monitorDate])
+
+
+
+    useEffect(() => {
+        showData(selectedDate);
+    }, [selectedDate])
 
 
     return (
@@ -507,7 +517,7 @@ const StatsScreen = ({ route }) => {
                             isPeriodDay ? <>
                                 <Text style={styles.heading}>Period</Text>
                                 <Text style={styles.heading}>day {nthePeriodDay}</Text>
-                                <Text style={styles.desc}>Hey {UserName?.trim()},How are you feeling today?</Text>
+                                <Text style={styles.desc}>Hey {UserName ? UserName : null},How are you feeling today?</Text>
                             </>
                                 : null
                         }
@@ -654,25 +664,40 @@ const StatsScreen = ({ route }) => {
                         <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
                             <Text style={{ color: '#000' }}>{"Notes"}</Text>
                         </View>
-                        <TextInput
-                            style={{
-                                borderWidth: 1, borderColor: '#bfbfbf', borderRadius: 10, height: 100, color: '#000', margin: 0, padding: 0, paddingHorizontal: 10, paddingVertical: 5,
-                                fontSize: 18,
-                                textAlignVertical: 'top', // Align vertically to the top
-                                textAlign: 'left', // Align text to the left
-                            }}
-                            multiline
-                            numberOfLines={4}
-                            value={note}
-                            placeholder='Notes'
-                            placeholderTextColor={'#bfbfbf'}
-                            onChangeText={(text) => {
-                                console.log(text);
-                                setNote(text);
-                            }}
-                        >
-                        </TextInput>
 
+                        {
+                            note && note.trim().length && notedEditMode ? <TouchableOpacity onPress={() => setNotedEditMode(false)}>
+                                <View style={{
+                                    borderWidth: 1, borderColor: '#bfbfbf', borderRadius: 10, height: 100, color: '#000', margin: 0, padding: 0, paddingHorizontal: 10, paddingVertical: 5,
+
+                                    textAlignVertical: 'top', // Align vertically to the top
+                                    textAlign: 'left', // Align text to the left
+
+                                }}>
+                                    <Text style={{ color: '#000', fontSize: 18, }}>
+                                        {note}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                                : <TextInput
+                                    style={{
+                                        borderWidth: 1, borderColor: '#bfbfbf', borderRadius: 10, height: 100, color: '#000', margin: 0, padding: 0, paddingHorizontal: 10, paddingVertical: 5,
+                                        fontSize: 18,
+                                        textAlignVertical: 'top', // Align vertically to the top
+                                        textAlign: 'left', // Align text to the left
+                                    }}
+                                    multiline
+                                    numberOfLines={4}
+                                    value={note}
+                                    placeholder='Empty...'
+                                    placeholderTextColor={'#bfbfbf'}
+                                    onChangeText={(text) => {
+                                        setSaveOptionVisible(true);
+                                        setNote(text);
+                                    }}
+                                >
+                                </TextInput>
+                        }
                     </View>
 
                     {
@@ -691,8 +716,9 @@ const StatsScreen = ({ route }) => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => {
-                                    console.log(selectedDate);
                                     saveData(selectedDate)
+                                    setNotedEditMode(true)
+                                    setSaveOptionVisible(false);
                                 }}
                             >
                                 <View style={{ backgroundColor: colors.primary, paddingHorizontal: 20, paddingVertical: 15, borderRadius: 10 }}>

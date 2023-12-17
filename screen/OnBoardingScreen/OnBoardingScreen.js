@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import IconComponent from '../../components/IconComponent/IconComponent';
 import { colors } from '../../theme/styles';
 import * as Animatable from 'react-native-animatable';
+import Loader from '../../components/Loader/Loader';
 
 
 
@@ -17,29 +18,28 @@ const OnBoardingScreen = () => {
     const [currentIndex, setCurrentIndex] = useState(0)
     const scrollX = useRef(new Animated.Value(0)).current
     const slideRef = useRef(null)
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const slides = [
         {
             id: 1,
-            title: "Lorem ipsum dolor sit amet consectetur. Venenatis consequat etiam orci at. Turpis elit.",
-            src: require('../../assets/lottie/girl-meditating.json')
+            title: "Track Your Monthly Cycle",
+            subtitle: "Take control of your reproductive health by tracking your menstrual cycle effortlessly.",
+            src: require('../../assets/lottie/Animation - 1702741951077.json')
         },
         {
             id: 2,
-            title: "Lorem ipsum dolor sit amet consectetur. Venenatis consequat etiam orci at. Turpis elit.",
-            src: require('../../assets/lottie/girl-meditating.json')
+            title: "Stay Informed",
+            subtitle: `Explore valuable insights about your menstrual health, fertility, and more.Stay informed, stay empowered!`,
+            src: require('../../assets/lottie/sunflower.json')
         },
         {
             id: 3,
-            title: "Lorem ipsum dolor sit amet consectetur. Venenatis consequat etiam orci at. Turpis elit.",
-            src: require('../../assets/lottie/girl-meditating.json')
-        },
-        {
-            id: 4,
-            title: "Lorem ipsum dolor sit amet consectetur. Venenatis consequat etiam orci at. Turpis elit.",
-            src: require('../../assets/lottie/girl-meditating.json')
-        },
+            title: "You're All Set!",
+            subtitle: `Start your journey to a healthier, happier you`,
+            src: require('../../assets/lottie/glower-blossem.json')
+        }
     ]
 
     const viewItemChanged = useRef(({ viewableItems }) => {
@@ -49,14 +49,18 @@ const OnBoardingScreen = () => {
     const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
     useEffect(() => {
-        // const AlreadyOnBoarded = async () => {
-        //     const result = await getDataItem('UserOnboarding');
 
-        //     if (result) {
-        //         navigation.navigate('AppScreen')
-        //     }
+        // const screen2Preload = navigation.navigate('AppScreen');
 
-        // }
+
+        const AlreadyOnBoarded = async () => {
+            const result = await getDataItem('UserOnboarding');
+
+            if (result) {
+                navigation.navigate('AppScreen')
+            }
+
+        }
 
         // AlreadyOnBoarded();
     }, []);
@@ -73,8 +77,6 @@ const OnBoardingScreen = () => {
                 barStyle={'dark-content'}
                 backgroundColor={'white'}
             />
-            <View style={{ marginLeft: 40 }}>
-            </View>
             <FlatList
                 data={slides}
                 renderItem={({ item }) => <OnBoardingItem item={item} />}
@@ -128,4 +130,4 @@ const OnBoardingScreen = () => {
 
 
 
-export default Animatable.createAnimatableComponent(OnBoardingScreen)
+export default OnBoardingScreen

@@ -1,6 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import LottieView from 'lottie-react-native';
+import { colors } from '../../theme/styles';
+import Loader from '../Loader/Loader';
 
 const OnBoardingItem = ({ item }) => {
 
@@ -18,6 +20,7 @@ const OnBoardingItem = ({ item }) => {
                 source={item.src}
                 autoPlay={true}
             />
+            <Text style={styles.subtitle} >{item.subtitle}</Text>
         </View>
     )
 }
@@ -38,12 +41,21 @@ const styles = StyleSheet.create({
         height: "90%"
     },
     title: {
-        fontSize: 16,
+        fontSize: 23,
         lineHeight: 22,
         paddingHorizontal: 70,
         color: 'black',
         textAlign: 'center',
-        fontFamily: "Montserrat-Medium"
+        color: colors.primary,
+        fontFamily: "Inter-Regular"
+    },
+    subtitle: {
+        fontSize: 20,
+        lineHeight: 22,
+        paddingHorizontal: 30,
+        color: colors.darkGrey,
+        textAlign: 'center',
+        fontFamily: "Inter-Regular"
     }
 })
 

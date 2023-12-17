@@ -14,7 +14,7 @@ import moment from 'moment';
 
 const ScollableInfiniteCalendar = () => {
 
-    const { markedPeriodDate, setMarkedPeriodDate } = useContext(UserContext);
+    const { markedPeriodDate, setMarkedPeriodDate, periodLength } = useContext(UserContext);
 
 
     const [visible, setVisible] = React.useState(false);
@@ -191,12 +191,16 @@ const ScollableInfiniteCalendar = () => {
             <CalendarList
                 style={{ height: "90%" }}
                 onDayPress={(d) => {
-                    // onDayPress(d);
-
                     if (selectedDates.filter(date => date === d.dateString).length) {
                         setSelectedDates(selectedDates.filter(date => date !== d.dateString));
                     } else {
-                        setSelectedDates([...selectedDates, d.dateString]);
+
+                        let dateArray = [d.dateString];
+
+                        for (let i = 1; i < periodLength; i++) {
+                            dateArray.push(moment(d.dateString).add(i, 'days').format('YYYY-MM-DD'));
+                        }
+                        setSelectedDates([...selectedDates, ...dateArray]);
                     }
                 }}
                 pastScrollRange={3}

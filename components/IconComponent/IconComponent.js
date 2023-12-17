@@ -35,7 +35,7 @@ const IconComponent = ({ iconType, iconName, size, color }) => {
     if (Icon) {
         return <Icon name={iconName} size={size} color={color} />;
     } else {
-        return <Text>Icon Library not found</Text>;
+        return null;
     }
 };
 

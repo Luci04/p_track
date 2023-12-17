@@ -15,6 +15,7 @@ import { BackHandler } from 'react-native';
 import moment from 'moment';
 import notifee, { EventType } from '@notifee/react-native';
 import MainNavigator from './navigations/MainNavigator';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App() {
 
@@ -32,12 +33,15 @@ export default function App() {
 
 
   return (
-    <NavigationContainer>
-      <PaperProvider>
-        <UserProvider>
-          <MainNavigator />
-        </UserProvider>
-      </PaperProvider>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <PaperProvider>
+          <UserProvider>
+            <MainNavigator />
+          </UserProvider>
+        </PaperProvider>
+      </NavigationContainer>
+    </GestureHandlerRootView>
+
   );
 }

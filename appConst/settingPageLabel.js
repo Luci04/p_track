@@ -1,8 +1,5 @@
 import { ShareInfo, onCreateTriggerNotification } from "../utility/helperFunction";
 
-const navigation = () => {
-
-}
 
 export default [
   {
@@ -11,14 +8,18 @@ export default [
     "iconCommunity": "MaterialIcons",
     "children": [
       {
-        "title": "Period prediction"
+        "title": "Period prediction",
+        "onClick": (navigatFunction) => {
+          navigatFunction();
+        },
+        "Screen": "PredictionScreen"
       },
-      {
-        "title": "Ovulation and fertility prediction"
-      },
-      {
-        "title": "Pregnancy"
-      }
+      // {
+      //   "title": "Ovulation and fertility prediction"
+      // },
+      // {
+      //   "title": "Pregnancy"
+      // }
     ]
   },
   {

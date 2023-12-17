@@ -11,6 +11,7 @@ import DailyLoggingRemainder from '../screen/SettingScreens/DailyLoggingRemainde
 import TrackingRemainder from '../screen/SettingScreens/TrackingRemainder';
 import SecureAccessScreen from '../screen/SettingScreens/SecureAccessScreen';
 import YourNameScreen from '../screen/SettingScreens/YourNameScreen';
+import PeriodPrediction from '../screen/SettingScreens/PeriodPrediction';
 
 
 const Stack = createStackNavigator();
@@ -29,6 +30,9 @@ const SettingNavigator = () => {
             initialRouteName='SettingScreen'
         >
             <Stack.Screen name="SettingScreen" component={SettingScreen} />
+
+            <Stack.Screen name="PredictionScreen" component={PeriodPrediction} />
+
             <Stack.Screen name="Cycle Remainder" options={{ headerShown: true }} component={CycleRemainder} />
             <Stack.Screen name="Medicine Remainder" options={{ headerShown: true }} component={MedicineRemainder} />
             <Stack.Screen name="Contraception Remainder" options={{ headerShown: true }} component={ContraceptionRemainder} />
