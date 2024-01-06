@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, StatusBar } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import LottieView from 'lottie-react-native';
 import { colors } from '../../theme/styles';
@@ -56,6 +56,7 @@ const MeditationScreen = ({ navigation }) => {
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}>
+            <StatusBar backgroundColor={colors.primary} barStyle={'light-content'} />
             {
                 step == 0 && <>
                     <Animatable.View animation="fadeIn" iterationCount={1} >
@@ -84,8 +85,9 @@ const MeditationScreen = ({ navigation }) => {
                         inputStyles={{ color: '#fff', padding: 10, justifyContent: 'center', alignItems: 'center' }}
                         boxStyles={{ justifyContent: 'center', alignItems: 'center', borderColor: '#fff', color: '#fff', width: 150 }}
                         dropdownStyles={{ justifyContent: 'center', alignItems: 'center', borderColor: '#fff', color: '#fff', width: 150 }}
-                        dropdownItemStyles={{ color: '#fff', padding: 0 }}
-                        dropdownTextStyles={{ color: '#fff', justifyContent: 'center', alignItems: 'center' }}
+                        fontFamily='Inter-Regular'
+                        dropdownItemStyles={{ color: '#fff', padding: 0, width: 150 }}
+                        dropdownTextStyles={{ color: '#fff', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
                         search={false}
                         setSelected={(val) => setSelected(val)}
                         placeholder='Set Timer'

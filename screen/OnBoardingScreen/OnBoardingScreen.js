@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import SafeView from '../../components/SafeView/SafeView';
-import { Animated, FlatList, Text, View, TouchableOpacity, StatusBar } from 'react-native';
+import { Animated, FlatList, Text, View, TouchableOpacity, StatusBar, ScrollView } from 'react-native';
 import OnBoardingItem from '../../components/OnBoardingItem/OnBoardingItem';
 import Paginator from './Paginator';
 import { getDataItem, storeDataItem } from '../../utility/storage';
@@ -68,62 +68,69 @@ const OnBoardingScreen = () => {
 
     return (
         <SafeView style={{
-            flex: 1,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingVertical: 30
+
         }}>
             <StatusBar
                 barStyle={'dark-content'}
                 backgroundColor={'white'}
             />
-            <FlatList
-                data={slides}
-                renderItem={({ item }) => <OnBoardingItem item={item} />}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                pagingEnabled
-                bounces={false}
-                keyExtractor={(item) => item.id}
-                onViewableItemsChanged={viewItemChanged}
-                viewabilityConfig={viewConfig}
-                scrollEventThrottle={32}
-                onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
-                    useNativeDriver: false
-                })}
-                ref={slideRef}
-            />
-            <Paginator scrollX={scrollX} data={slides} />
-            <TouchableOpacity style={{
-                backgroundColor: '#e14e69',
-                width: 50,
-                height: 50,
-                // padding: 20,
-                borderRadius: 25,
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}
-                onPress={
-                    async () => {
-                        if (slideRef.current) {
-                            if (currentIndex === (slides.length - 1)) {
-                                await storeDataItem('UserOnboarding', "true");
-                                navigation.navigate('AppScreen')
-                            } else {
-                                slideRef.current.scrollToIndex({
-                                    index: currentIndex + 1,
-                                    animated: true,
-                                });
+            <ScrollView contentContainerStyle={
+                {
+                    flex: 1,
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingVertical: 30
+                }
+            }>
+                <FlatList
+                    data={slides}
+                    renderItem={({ item }) => <OnBoardingItem item={item} />}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    pagingEnabled
+                    bounces={false}
+                    keyExtractor={(item) => item.id}
+                    onViewableItemsChanged={viewItemChanged}
+                    viewabilityConfig={viewConfig}
+                    scrollEventThrottle={32}
+                    onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
+                        useNativeDriver: false
+                    })}
+                    ref={slideRef}
+                />
+                <Paginator scrollX={scrollX} data={slides} />
+                <TouchableOpacity style={{
+                    backgroundColor: '#e14e69',
+                    width: 50,
+                    height: 50,
+                    // padding: 20,
+                    borderRadius: 25,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+                    onPress={
+                        async () => {
+                            if (slideRef.current) {
+                                if (currentIndex === (slides.length - 1)) {
+                                    await storeDataItem('UserOnboarding', "true");
+                                    navigation.navigate('AppScreen')
+                                } else {
+                                    slideRef.current.scrollToIndex({
+                                        index: currentIndex + 1,
+                                        animated: true,
+                                    });
+                                }
                             }
                         }
-                    }
 
-                }
-            >
-                <Animatable.View animation="tada" easing="ease-out" iterationCount="infinite">
-                    <IconComponent size={40} iconName={'chevron-right'} iconType={'EvilIcons'} color={colors.white} />
-                </Animatable.View>
-            </TouchableOpacity>
+                    }
+                >
+                    <Animatable.View animation="tada" easing="ease-out" iterationCount="infinite">
+                        <IconComponent size={40} iconName={'chevron-right'} iconType={'EvilIcons'} color={colors.white} />
+                    </Animatable.View>
+                </TouchableOpacity>
+            </ScrollView>
+
         </SafeView>
     )
 }

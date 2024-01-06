@@ -10,7 +10,7 @@ const OnBoardingItem = ({ item }) => {
 
     return (
         <View style={[styles.container, { width }]}>
-            <Text style={[styles.title, { marginTop: 10 }]} >{item.title}</Text>
+            <Text style={[styles.title, { marginTop: 10 }]} adjustsFontSizeToFit >{item.title}</Text>
             <LottieView
                 style={{
                     width: 350,
@@ -20,7 +20,7 @@ const OnBoardingItem = ({ item }) => {
                 source={item.src}
                 autoPlay={true}
             />
-            <Text style={styles.subtitle} >{item.subtitle}</Text>
+            <Text style={styles.subtitle} adjustsFontSizeToFit >{item.subtitle}</Text>
         </View>
     )
 }

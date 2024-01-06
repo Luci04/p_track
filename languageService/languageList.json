@@ -1,0 +1,27 @@
+{
+  "pt": {
+    "name": "Portuguese",
+    "nativeName": "Português",
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Portugal.svg/600px-Flag_of_Portugal.svg.png"
+  },
+  "en": {
+    "name": "English",
+    "nativeName": "English",
+    "img": "https://flagdownload.com/wp-content/uploads/Flag_of_United_Kingdom_Flat_Square.png"
+  },
+  "ar": {
+    "name": "Arabic",
+    "nativeName": "العربية",
+    "img": "https://flagdownload.com/wp-content/uploads/Flag_of_United_Kingdom_Flat_Square.png"
+  },
+  "fr": {
+    "name": "French",
+    "nativeName": "Français",
+    "img": "https://flagdownload.com/wp-content/uploads/Flag_of_United_Kingdom_Flat_Square.png"
+  },
+  "am": {
+    "name": "Amharic ",
+    "nativeName": "Amharic",
+    "img": "https://example.com/your-aramaic-flag-image.png"
+  }
+}

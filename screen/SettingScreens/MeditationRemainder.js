@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Divider, Switch } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
-import { getDataItem, storeDataItem } from '../../utility/storage';
+import { getDataItem, removeValue, storeDataItem } from '../../utility/storage';
 import notifee, { TimestampTrigger, TriggerType, RepeatFrequency } from '@notifee/react-native';
 import { colors } from '../../theme/styles';
 
@@ -14,24 +14,24 @@ const MeditationRemainder = () => {
     const [selectedTime, setSelectedTime] = React.useState(null);
 
     async function onCreateTriggerNotification(time) {
-
         const date = new Date();
         const today = new Date();
 
-        if (date < today) {
-            date.setDate(date.getDate() + 1);
+        if (date >= today) {
+            // If it's already past the specified time today, set it for tomorrow
+            today.setDate(today.getDate() + 1);
         }
 
-        date.setHours(Number(time[0]));
-        date.setMinutes(Number(time[1]));
+        today.setHours(Number(time[0]));
+        today.setMinutes(Number(time[1]));
 
         const trigger = {
             type: TriggerType.TIMESTAMP,
-            repeatType: RepeatFrequency.HOURLY,
-            timestamp: date.getTime(), // Trigger the notification after 1 minute
+            repeatType: RepeatFrequency.DAILY,
+            timestamp: today.getTime(), // Trigger the notification at the specified time
         };
 
-        console.log(date.getTime());
+        console.log(today.getTime());
 
         // Create a trigger notification
         await notifee.createTriggerNotification({
@@ -67,6 +67,7 @@ const MeditationRemainder = () => {
         } else {
             console.log("Notification Canclled")
             await notifee.deleteChannel('MeditationRemainderNotification');
+            await removeValue('MeditationRemainderNotification');
         }
         setIsSwitchOn(data);
     }
@@ -85,11 +86,17 @@ const MeditationRemainder = () => {
     const handleConfirm = async (date) => {
         const time = moment(date).format('HH:mm').split(':');
         console.log(time)
-        storeDataItem('MeditationRemainderNotification', moment(date).format('LT'));
-        const channelId = await notifee.createChannel({
-            id: 'MeditationRemainderNotification',
-            name: 'Default Channel',
-        });
+
+        const existingChannel = await notifee.getChannel('ContraceptionRemainderNotification');
+
+        if (!existingChannel) {
+            const channelId = await notifee.createChannel({
+                id: 'MeditationRemainderNotification',
+                name: 'Default Channel',
+            });
+        }
+
+        await storeDataItem('MeditationRemainderNotification', moment(date).format('LT'));
         await onCreateTriggerNotification(time);
         setSelectedTime(time)
         hideDatePicker();

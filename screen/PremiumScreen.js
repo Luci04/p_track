@@ -5,6 +5,8 @@ import LoveYourSelf from '../assets/undraw_a_whole_year_vnfm.png';
 import IconComponent from '../components/IconComponent/IconComponent';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../theme/styles';
+import BannerAds from '../components/Ads/BannerAds';
+import InterstitialAds from '../components/Ads/InterstitialAds';
 
 const featureArr = [
     {
@@ -71,8 +73,6 @@ const PremiumScreen = () => {
 
     const [scrollPercentage, setscrollPercentage] = useState(0)
 
-
-
     const onScroll = (event) => {
         const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
 
@@ -91,6 +91,8 @@ const PremiumScreen = () => {
 
     return (
         <SafeView>
+            <BannerAds />
+            <InterstitialAds />
             <FlatList
                 onScroll={onScroll}
                 style={{

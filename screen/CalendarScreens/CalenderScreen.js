@@ -11,7 +11,7 @@ import LottieView from 'lottie-react-native';
 
 const CalenderScreen = ({ navigation }) => {
 
-    const { periodStart, setPeriodStart, markedPeriodDate } = useContext(UserContext);
+    const { periodStart, setPeriodStart, markedPeriodDate, periodLength, periodCycle } = useContext(UserContext);
 
     const [historyMarkedDates, setHistoryMarkedDates] = useState([])
     const [markingDates, setMarkingDates] = useState({})
@@ -43,7 +43,7 @@ const CalenderScreen = ({ navigation }) => {
 
         // Calculate the ovulation date
         const ovulationDate = new Date(lastPeriodDate);
-        ovulationDate.setDate(lastPeriodDate.getDate() + (cycleLength - 14)); // Most women ovulate around day 14
+        ovulationDate.setDate(lastPeriodDate.getDate() + (periodCycle - 14)); // Most women ovulate around day 14
 
         return ovulationDate;
     }
@@ -157,7 +157,7 @@ const CalenderScreen = ({ navigation }) => {
 
 
             for (let j = 0; j < 450; j++) {
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < periodLength; i++) {
 
                     if (j > 0) {
                         const currDate = moment(startingDate).add(j * 28 + i, 'days').format('YYYY-MM-DD');
@@ -168,7 +168,7 @@ const CalenderScreen = ({ navigation }) => {
                                     text: styles.periodDate
                                 }
                             }
-                        } else if (i == 4) {
+                        } else if (i == periodLength - 1) {
                             tempMark[currDate] = {
                                 customStyles: {
                                     container: compareDates(today, currDate) == 'greater' ? styles.periodEndDateStyle : styles.expectedPeriodEndDateStyle,
@@ -254,7 +254,8 @@ const CalenderScreen = ({ navigation }) => {
     useEffect(() => {
         markPeriod()
 
-    }, [markedPeriodDate, periodStart])
+    }, [markedPeriodDate, periodStart, periodLength, periodCycle])
+
 
 
 
