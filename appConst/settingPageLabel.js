@@ -103,7 +103,11 @@ export default [
         "title": "stats_updates"
       },
       {
-        "title": "language"
+        "title": "language",
+        "onClick": (navigatFunction) => {
+          navigatFunction();
+        },
+        "Screen": "Language Screen"
       }
     ]
   },

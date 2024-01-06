@@ -9,6 +9,7 @@ import Modal from "react-native-modal";
 import { UserContext } from '../../context/UserContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import moment from 'moment';
+import TranslatedText from '../TranslatedText/TranslatedText';
 
 
 
@@ -200,7 +201,11 @@ const ScollableInfiniteCalendar = () => {
                         for (let i = 1; i < periodLength; i++) {
                             dateArray.push(moment(d.dateString).add(i, 'days').format('YYYY-MM-DD'));
                         }
-                        setSelectedDates([...selectedDates, ...dateArray]);
+
+                        const UniquesDates = new Set([...selectedDates, ...dateArray]);
+
+                        setSelectedDates(Array.from(UniquesDates));
+                        // console.log([...selectedDates, ...dateArray]);
                     }
                 }}
                 pastScrollRange={3}
@@ -234,9 +239,9 @@ const ScollableInfiniteCalendar = () => {
                         paddingVertical: 15,
                         borderRadius: 50
                     }}>
-                        <Text style={{ color: '#fff' }}>
-                            Cancel
-                        </Text>
+                        <TranslatedText style={{ color: '#fff' }}>
+                            cancle
+                        </TranslatedText>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -247,9 +252,9 @@ const ScollableInfiniteCalendar = () => {
                         paddingVertical: 15,
                         borderRadius: 50
                     }}>
-                        <Text style={{ color: colors.primary }}>
-                            Save
-                        </Text>
+                        <TranslatedText style={{ color: colors.primary }}>
+                            save
+                        </TranslatedText>
                     </View>
                 </TouchableOpacity>
             </View>

@@ -12,6 +12,7 @@ import TrackingRemainder from '../screen/SettingScreens/TrackingRemainder';
 import SecureAccessScreen from '../screen/SettingScreens/SecureAccessScreen';
 import YourNameScreen from '../screen/SettingScreens/YourNameScreen';
 import PeriodPrediction from '../screen/SettingScreens/PeriodPrediction';
+import LanguageScreen from '../screen/SettingScreens/LanguageScreen';
 
 
 const Stack = createStackNavigator();
@@ -42,6 +43,7 @@ const SettingNavigator = () => {
 
             <Stack.Screen name="Secure Accesss" options={{ headerShown: true }} component={SecureAccessScreen} />
             <Stack.Screen name="Your Name Screen" options={{ headerShown: true, title: "Your Name" }} component={YourNameScreen} />
+            <Stack.Screen name="Language Screen" options={{ headerShown: true }} component={LanguageScreen} />
 
         </Stack.Navigator>
     )

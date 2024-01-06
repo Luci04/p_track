@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import SafeView from '../components/SafeView/SafeView'
 import IconsInfo from '../appConst/settingPageLabel'
 import IconComponent from '../components/IconComponent/IconComponent'
@@ -50,7 +50,8 @@ const RenderItem = ({ item, index }) => {
     </View>
 }
 
-const SettingScreen = () => {
+const SettingScreen = ({ navigation }) => {
+
     return (
         <SafeView>
             <FlatList
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#000',
         textAlign: 'center',
-        paddingVertical: 20
+        paddingTop: 20
     },
     flatListContainer: {
         paddingLeft: 20,

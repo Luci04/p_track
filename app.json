@@ -1,4 +1,7 @@
 {
   "name": "p_track",
-  "displayName": "p_track"
+  "displayName": "p_track",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-1135059327679965~3331229551"
+  }
 }
