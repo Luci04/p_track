@@ -24,20 +24,20 @@ const OnBoardingScreen = () => {
     const slides = [
         {
             id: 1,
-            title: "Track Your Monthly Cycle",
-            subtitle: "Take control of your reproductive health by tracking your menstrual cycle effortlessly.",
+            title: "track_your_monthly_cycle",
+            subtitle: "take_control_description",
             src: require('../../assets/lottie/Animation - 1702741951077.json')
         },
         {
             id: 2,
-            title: "Stay Informed",
-            subtitle: `Explore valuable insights about your menstrual health, fertility, and more.Stay informed, stay empowered!`,
+            title: "stay_informed",
+            subtitle: "explore_insights_description",
             src: require('../../assets/lottie/sunflower.json')
         },
         {
             id: 3,
-            title: "You're All Set!",
-            subtitle: `Start your journey to a healthier, happier you`,
+            title: "youre_all_set",
+            subtitle: "start_your_journey",
             src: require('../../assets/lottie/glower-blossem.json')
         }
     ]

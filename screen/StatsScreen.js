@@ -8,6 +8,8 @@ import moment from 'moment';
 import { UserContext } from '../context/UserContext';
 import { openDatabase } from 'react-native-sqlite-storage';
 import { useNavigation } from '@react-navigation/native';
+import TranslatedText from '../components/TranslatedText/TranslatedText';
+import { useTranslation } from 'react-i18next';
 
 var db = openDatabase({ name: 'DatabaseName6.db' });
 
@@ -20,6 +22,7 @@ const StatsScreen = ({ route }) => {
         "Contraception": null
     })
 
+    const { t } = useTranslation();
     const monitorDate = route.params?.monitorDate
 
     const [futurePeriodDayLeft, setFuturePeriodDayLeft] = useState(0);
@@ -526,8 +529,7 @@ const StatsScreen = ({ route }) => {
 
                     <View style={{ gap: 5, paddingVertical: 10 }}  >
                         <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
-                            <Text style={{ color: '#000' }}>{"Sexual Activity"}</Text>
-                            {/* <Text style={{ color: '#000' }}>Select All</Text> */}
+                            <TranslatedText style={{ color: '#000' }}>sexual_activity</TranslatedText>
                         </View>
                         <ScrollView
                             horizontal
@@ -535,7 +537,7 @@ const StatsScreen = ({ route }) => {
                             showsHorizontalScrollIndicator={false}
                             ref={scroll1}
                         >
-                            {emojiMap["Sexual Activity"].map((mood) => (
+                            {emojiMap["sexual_activity"].map((mood) => (
                                 <TouchableOpacity
                                     onPress={() => handleFeelings("Sexual Activity", mood.id)}
                                     key={mood.id}
@@ -550,7 +552,7 @@ const StatsScreen = ({ route }) => {
                                         }}>
                                             <Text style={{ fontSize: 20, color: '#000' }}>{mood.emoji}</Text>
                                         </View>
-                                        <Text style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</Text>
+                                        <TranslatedText style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</TranslatedText>
                                     </View>
                                 </TouchableOpacity>
 
@@ -560,8 +562,7 @@ const StatsScreen = ({ route }) => {
 
                     <View style={{ gap: 5, paddingVertical: 10 }}  >
                         <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
-                            <Text style={{ color: '#000' }}>{"Symptoms Activity"}</Text>
-                            {/* <Text style={{ color: '#000' }}>Select All</Text> */}
+                            <TranslatedText style={{ color: '#000' }}>symptoms_activity</TranslatedText>
                         </View>
                         <ScrollView
                             horizontal
@@ -569,7 +570,7 @@ const StatsScreen = ({ route }) => {
                             showsHorizontalScrollIndicator={false}
                             ref={scroll2}
                         >
-                            {emojiMap["Symptoms Activity"].map((mood) => (
+                            {emojiMap["symptoms_activity"].map((mood) => (
                                 <TouchableOpacity
                                     onPress={() => handleFeelings("Symptoms Activity", mood.id)}
                                     key={mood.id}
@@ -584,7 +585,7 @@ const StatsScreen = ({ route }) => {
                                         }}>
                                             <Text style={{ fontSize: 20, color: '#000' }}>{mood.emoji}</Text>
                                         </View>
-                                        <Text style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</Text>
+                                        <TranslatedText style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</TranslatedText>
                                     </View>
                                 </TouchableOpacity>
 
@@ -594,8 +595,7 @@ const StatsScreen = ({ route }) => {
 
                     <View style={{ gap: 5, paddingVertical: 10 }}  >
                         <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
-                            <Text style={{ color: '#000' }}>{"Moods"}</Text>
-                            {/* <Text style={{ color: '#000' }}>Select All</Text> */}
+                            <TranslatedText style={{ color: '#000' }}>moods</TranslatedText>
                         </View>
                         <ScrollView
                             horizontal
@@ -603,7 +603,7 @@ const StatsScreen = ({ route }) => {
                             showsHorizontalScrollIndicator={false}
                             ref={scroll3}
                         >
-                            {emojiMap["Moods"].map((mood) => (
+                            {emojiMap["moods"].map((mood) => (
                                 <TouchableOpacity
                                     onPress={() => handleFeelings("Moods", mood.id)}
                                     key={mood.id}
@@ -618,7 +618,7 @@ const StatsScreen = ({ route }) => {
                                         }}>
                                             <Text style={{ fontSize: 20, color: '#000' }}>{mood.emoji}</Text>
                                         </View>
-                                        <Text style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</Text>
+                                        <TranslatedText style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</TranslatedText>
                                     </View>
                                 </TouchableOpacity>
 
@@ -628,8 +628,7 @@ const StatsScreen = ({ route }) => {
 
                     <View style={{ gap: 5, paddingVertical: 10 }}  >
                         <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
-                            <Text style={{ color: '#000' }}>{"Contraception"}</Text>
-                            {/* <Text style={{ color: '#000' }}>Select All</Text> */}
+                            <TranslatedText style={{ color: '#000' }}>contraception</TranslatedText>
                         </View>
                         <ScrollView
                             horizontal
@@ -637,7 +636,7 @@ const StatsScreen = ({ route }) => {
                             showsHorizontalScrollIndicator={false}
                             ref={scroll4}
                         >
-                            {emojiMap["Contraception"].map((mood) => (
+                            {emojiMap["contraception"].map((mood) => (
                                 <TouchableOpacity
                                     onPress={() => handleFeelings("Contraception", mood.id)}
                                     key={mood.id}
@@ -652,7 +651,7 @@ const StatsScreen = ({ route }) => {
                                         }}>
                                             <Text style={{ fontSize: 20, color: '#000' }}>{mood.emoji}</Text>
                                         </View>
-                                        <Text style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</Text>
+                                        <TranslatedText style={{ fontSize: 9, color: '#000', textAlign: 'center' }} numberOfLines={1}>{mood.title}</TranslatedText>
                                     </View>
                                 </TouchableOpacity>
 
@@ -662,7 +661,7 @@ const StatsScreen = ({ route }) => {
 
                     <View style={{ gap: 5, paddingVertical: 10 }} >
                         <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
-                            <Text style={{ color: '#000' }}>{"Notes"}</Text>
+                            <TranslatedText style={{ color: '#000' }}>{"Notes"}</TranslatedText>
                         </View>
 
                         {
@@ -689,7 +688,7 @@ const StatsScreen = ({ route }) => {
                                     multiline
                                     numberOfLines={4}
                                     value={note}
-                                    placeholder='Empty...'
+                                    placeholder={t('empty')}
                                     placeholderTextColor={'#bfbfbf'}
                                     onChangeText={(text) => {
                                         setSaveOptionVisible(true);
@@ -709,9 +708,9 @@ const StatsScreen = ({ route }) => {
                                 }}
                             >
                                 <View style={{ backgroundColor: colors.primary, paddingHorizontal: 20, paddingVertical: 15, borderRadius: 10 }}>
-                                    <Text style={{ color: '#fff', fontSize: 15 }}>
+                                    <TranslatedText style={{ color: '#fff', fontSize: 15 }}>
                                         Cancle
-                                    </Text>
+                                    </TranslatedText>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
@@ -722,9 +721,9 @@ const StatsScreen = ({ route }) => {
                                 }}
                             >
                                 <View style={{ backgroundColor: colors.primary, paddingHorizontal: 20, paddingVertical: 15, borderRadius: 10 }}>
-                                    <Text style={{ color: '#fff', fontSize: 15 }}>
+                                    <TranslatedText style={{ color: '#fff', fontSize: 15 }}>
                                         Save
-                                    </Text>
+                                    </TranslatedText>
                                 </View>
                             </TouchableOpacity>
                         </View> : null

@@ -7,6 +7,8 @@ import TimerHook from '../../hooks/timerHook';
 import { SelectList } from 'react-native-dropdown-select-list'
 import * as Animatable from 'react-native-animatable';
 import IconComponent from '../../components/IconComponent/IconComponent';
+import TranslatedText from '../../components/TranslatedText/TranslatedText';
+import { useTranslation } from 'react-i18next';
 
 
 const MeditationScreen = ({ navigation }) => {
@@ -14,7 +16,7 @@ const MeditationScreen = ({ navigation }) => {
     const [selected, setSelected] = React.useState(null);
 
     const [showExitButton, setSetshowExitButton] = useState(false)
-
+    const { t } = useTranslation();
     const width = Dimensions.get("screen").width - 10
 
     const data = [
@@ -65,14 +67,16 @@ const MeditationScreen = ({ navigation }) => {
                             setstep(1)
                         }}>
                             <View style={{ width: 'auto', backgroundColor: '#fff', paddingHorizontal: 15, paddingVertical: 10, borderRadius: 5, marginBottom: 25 }}>
-                                <Text style={{ color: colors.primary }}>
-                                    Start
-                                </Text>
+                                <TranslatedText style={{ color: colors.primary }}>
+                                    start
+                                </TranslatedText>
                             </View>
                         </TouchableOpacity>
                     </Animatable.View>
                     <Animatable.Text animation="fadeIn" iterationCount={1} duration={1500} style={{ color: colors.white, fontSize: 20 }}>
-                        Meditation
+                        <TranslatedText>
+                            meditation
+                        </TranslatedText>
                     </Animatable.Text>
                 </>
 
@@ -90,7 +94,7 @@ const MeditationScreen = ({ navigation }) => {
                         dropdownTextStyles={{ color: '#fff', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
                         search={false}
                         setSelected={(val) => setSelected(val)}
-                        placeholder='Set Timer'
+                        placeholder={t('set_timer')}
                         data={data}
                         save="key"
                         arrowicon={<IconComponent size={15} color={'#fff'} iconName={'chevron-down'} iconType={'Entypo'} />}
@@ -102,9 +106,9 @@ const MeditationScreen = ({ navigation }) => {
                                 setstep(2)
                             }}>
                                 <View style={{ width: 'auto', backgroundColor: '#fff', paddingHorizontal: 15, paddingVertical: 10, borderRadius: 5, marginTop: 25 }}>
-                                    <Text style={{ color: colors.primary, textAlign: 'center' }}>
-                                        Done
-                                    </Text>
+                                    <TranslatedText style={{ color: colors.primary, textAlign: 'center' }}>
+                                        done
+                                    </TranslatedText>
                                 </View>
                             </TouchableOpacity>
                         </Animatable.View>
@@ -123,9 +127,9 @@ const MeditationScreen = ({ navigation }) => {
                                 setstep(1)
                             }}>
                                 <View style={{ width: 'auto', backgroundColor: '#fff', paddingHorizontal: 15, paddingVertical: 10, borderRadius: 5, marginTop: 25 }}>
-                                    <Text style={{ color: colors.primary }}>
-                                        Once More
-                                    </Text>
+                                    <TranslatedText style={{ color: colors.primary }}>
+                                        once_more
+                                    </TranslatedText>
                                 </View>
                             </TouchableOpacity>
                         </Animatable.View>

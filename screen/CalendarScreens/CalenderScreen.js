@@ -8,9 +8,12 @@ import SafeView from '../../components/SafeView/SafeView';
 import moment from 'moment'
 import { UserContext } from '../../context/UserContext';
 import LottieView from 'lottie-react-native';
+import TranslatedText from '../../components/TranslatedText/TranslatedText';
+import { useTranslation } from 'react-i18next';
 
 const CalenderScreen = ({ navigation }) => {
 
+    const { t } = useTranslation()
     const { periodStart, setPeriodStart, markedPeriodDate, periodLength, periodCycle } = useContext(UserContext);
 
     const [historyMarkedDates, setHistoryMarkedDates] = useState([])
@@ -293,7 +296,7 @@ const CalenderScreen = ({ navigation }) => {
                         return <Text
                             style={{ fontSize: 25, color: colors.primaryLight, fontFamily: 'Inter-Regular' }}
                         >
-                            {MonthMapping[currdate.getMonth()]} {currdate.getFullYear()}
+                            {t(`${MonthMapping[currdate.getMonth()]}`)} {currdate.getFullYear()}
                         </Text>
                     }}
                 />
@@ -302,23 +305,23 @@ const CalenderScreen = ({ navigation }) => {
                         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 15 }}>
                             <View style={{ width: 14, height: 14, backgroundColor: colors.primaryLight, borderRadius: 7, justifyContent: 'center', alignItems: 'center' }}>
                             </View>
-                            <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: colors.black }} >Period</Text>
+                            <TranslatedText style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: colors.black }} >period</TranslatedText>
                         </View>
                         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 15 }}>
                             <View style={{ width: 14, height: 14, backgroundColor: colors.primaryLight, borderRadius: 7, justifyContent: 'center', alignItems: 'center' }}>
                                 <View style={{ width: 8, height: 8, backgroundColor: colors.white, borderRadius: 4 }}></View>
                             </View>
-                            <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: colors.black }} >Expected period</Text>
+                            <TranslatedText style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: colors.black }} >expected_period</TranslatedText>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 15 }}>
                             <View style={{ width: 14, height: 14, backgroundColor: '#c6c2ff', borderRadius: 7 }}></View>
-                            <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: colors.black }} >Ovulation</Text>
+                            <TranslatedText style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: colors.black }} >ovulation</TranslatedText>
                         </View>
                         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 15 }}>
                             <View style={{ width: 14, height: 14, backgroundColor: "#e5e7ff", borderRadius: 7 }}></View>
-                            <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: colors.black }} >Fertile</Text>
+                            <TranslatedText style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: colors.black }} >fertile</TranslatedText>
                         </View>
                     </View>
                 </View>
@@ -327,7 +330,7 @@ const CalenderScreen = ({ navigation }) => {
                     navigation.navigate('ScollableInfiniteCalendar')
                 }}>
                     <View style={{ padding: 15, borderColor: colors.borderColor, borderWidth: 1, borderRadius: 8, flexDirection: 'column', margin: 20, gap: 10 }}>
-                        <Text style={{ color: colors.black, textAlign: 'center' }}>Edit periods dates</Text>
+                        <TranslatedText style={{ color: colors.black, textAlign: 'center' }}>edit_periods_dates</TranslatedText>
                     </View>
                 </TouchableOpacity>
 
@@ -338,7 +341,7 @@ const CalenderScreen = ({ navigation }) => {
                     <View style={{ padding: 15, borderColor: colors.borderColor, borderWidth: 1, borderRadius: 8, flexDirection: 'column', margin: 20, gap: 10 }}>
                         <Image source={require('../../assets/lottie/Mindfulness.gif')} style={{ height: 200, width: '100%' }} resizeMode={'cover'} />
 
-                        <Text style={{ color: colors.black, textAlign: 'center' }}>Meditation Time</Text>
+                        <TranslatedText style={{ color: colors.black, textAlign: 'center' }}>meditation_time</TranslatedText>
                     </View>
 
                 </TouchableOpacity>

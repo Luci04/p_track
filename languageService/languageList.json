@@ -1,27 +1,72 @@
 {
+  "en": {
+    "name": "English",
+    "nativeName": "English",
+    "img": "https://flagdownload.com/wp-content/uploads/Flag_of_United_Kingdom_Flat_Square.png"
+  },
+  "es": {
+    "name": "Spanish",
+    "nativeName": "Español",
+    "img": "https://example.com/your-spanish-flag-image.png"
+  },
+  "fr": {
+    "name": "French",
+    "nativeName": "Français",
+    "img": "https://example.com/your-french-flag-image.png"
+  },
+  "de": {
+    "name": "German",
+    "nativeName": "Deutsch",
+    "img": "https://example.com/your-german-flag-image.png"
+  },
+  "it": {
+    "name": "Italian",
+    "nativeName": "Italiano",
+    "img": "https://example.com/your-italian-flag-image.png"
+  },
+  "ru": {
+    "name": "Russian",
+    "nativeName": "Русский",
+    "img": "https://example.com/your-russian-flag-image.png"
+  },
   "pt": {
     "name": "Portuguese",
     "nativeName": "Português",
     "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Portugal.svg/600px-Flag_of_Portugal.svg.png"
   },
-  "en": {
-    "name": "English",
-    "nativeName": "English",
-    "img": "https://flagdownload.com/wp-content/uploads/Flag_of_United_Kingdom_Flat_Square.png"
+  "tr": {
+    "name": "Turkish",
+    "nativeName": "Türkçe",
+    "img": "https://example.com/your-turkish-flag-image.png"
+  },
+  "zh": {
+    "name": "Chinese",
+    "nativeName": "中文",
+    "img": "https://example.com/your-chinese-flag-image.png"
   },
   "ar": {
     "name": "Arabic",
     "nativeName": "العربية",
     "img": "https://flagdownload.com/wp-content/uploads/Flag_of_United_Kingdom_Flat_Square.png"
   },
-  "fr": {
-    "name": "French",
-    "nativeName": "Français",
-    "img": "https://flagdownload.com/wp-content/uploads/Flag_of_United_Kingdom_Flat_Square.png"
+  "ja": {
+    "name": "Japanese",
+    "nativeName": "日本語",
+    "img": "https://example.com/your-japanese-flag-image.png"
   },
-  "am": {
-    "name": "Amharic ",
-    "nativeName": "Amharic",
-    "img": "https://example.com/your-aramaic-flag-image.png"
+  "ko": {
+    "name": "Korean",
+    "nativeName": "한국어",
+    "img": "https://example.com/your-korean-flag-image.png"
+  },
+  "he": {
+    "name": "Hebrew",
+    "nativeName": "עברית",
+    "img": "https://example.com/your-hebrew-flag-image.png"
+  },
+  "hi": {
+    "name": "Hindi",
+    "nativeName": "हिन्दी",
+    "img": "https://example.com/your-hindi-flag-image.png"
   }
 }

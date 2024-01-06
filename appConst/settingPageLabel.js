@@ -3,12 +3,12 @@ import { ShareInfo, onCreateTriggerNotification } from "../utility/helperFunctio
 
 export default [
   {
-    "title": "My Cycle",
+    "title": "my_cycle",
     "iconName": "water-drop",
     "iconCommunity": "MaterialIcons",
     "children": [
       {
-        "title": "Period prediction",
+        "title": "period_prediction",
         "onClick": (navigatFunction) => {
           navigatFunction();
         },
@@ -23,47 +23,47 @@ export default [
     ]
   },
   {
-    "title": "Reminders",
+    "title": "reminders",
     "iconName": "bell",
     "iconCommunity": "Entypo",
     "children": [
       {
-        "title": "Cycle reminder",
+        "title": "cycle_reminder",
         "onClick": (navigatFunction) => {
           navigatFunction();
         },
         "Screen": "Cycle Remainder"
       },
       {
-        "title": "Medicine reminder",
+        "title": "medicine_reminder",
         "onClick": (navigatFunction) => {
           navigatFunction();
         },
         "Screen": "Medicine Remainder"
       },
       {
-        "title": "Contraception reminder",
+        "title": "contraception_reminder",
         "onClick": (navigatFunction) => {
           navigatFunction();
         },
         "Screen": "Contraception Remainder"
       },
       {
-        "title": "Meditation remainder",
+        "title": "meditation_remainder",
         "onClick": (navigatFunction) => {
           navigatFunction();
         },
         "Screen": "Meditation Remainder"
       },
       {
-        "title": "Daily logging remainder",
+        "title": "daily_logging_remainder",
         "onClick": (navigatFunction) => {
           navigatFunction();
         },
         "Screen": "Daily Logging Remainder"
       },
       {
-        "title": "Tracking remainder",
+        "title": "tracking_remainder",
         "onClick": (navigatFunction) => {
           navigatFunction();
         },
@@ -75,79 +75,79 @@ export default [
     ]
   },
   {
-    "title": "Personal",
+    "title": "personal",
     "iconName": "face-woman-shimmer-outline",
     "iconCommunity": "MaterialCommunityIcons",
     "children": [
       {
-        "title": "Your Name",
+        "title": "your_name",
         "onClick": (navigatFunction) => {
           navigatFunction();
         },
         "Screen": "Your Name Screen"
       },
       {
-        "title": "Secure access (PIN)",
+        "title": "secure_access_pin",
         "onClick": (navigatFunction) => {
           navigatFunction();
         },
         "Screen": "Secure Accesss"
       },
       {
-        "title": "Calender view"
+        "title": "calender_view"
       },
       {
-        "title": "Regional setting"
+        "title": "regional_setting"
       },
       {
-        "title": "Stats updates"
+        "title": "stats_updates"
       },
       {
-        "title": "Language"
+        "title": "language"
       }
     ]
   },
   {
-    "title": "My Data",
+    "title": "my_data",
     "iconName": "database",
     "iconCommunity": "Octicons",
     "children": [
       {
-        "title": "Back up data"
+        "title": "back_up_data"
       },
       {
-        "title": "Restore data"
+        "title": "restore_data"
       },
       {
-        "title": "Delete app data"
+        "title": "delete_app_data"
       }
     ]
   },
   {
-    "title": "Other",
+    "title": "other",
     "iconName": "setting",
     "iconCommunity": "AntDesign",
     "children": [
       {
-        "title": "Upgrade to Premium"
+        "title": "upgrade_to_premium"
       },
       {
-        "title": "Remove ads"
+        "title": "remove_ads"
       },
       {
-        "title": "Share with friends",
+        "title": "share_with_friends",
         onClick: ShareInfo
       },
       {
-        "title": "Security",
+        "title": "security",
         onClick: onCreateTriggerNotification
       },
       {
-        "title": "Privacy"
+        "title": "privacy"
       },
       {
-        "title": "Rate app"
+        "title": "rate_app"
       }
     ]
   }
-]
+];

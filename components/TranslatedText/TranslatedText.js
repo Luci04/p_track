@@ -1,17 +1,13 @@
-import { StyleSheet, Text, View, StyleProp } from 'react-native'
-import { React, ReactNode } from 'react'
-import React from 'react'
+import { StyleSheet, Text } from 'react-native'
+import { React } from 'react'
 import { useTranslation } from 'react-i18next'
 
-const TranslatedText = ({ children: ReachChild, style: StyleProp }) => {
-
+const TranslatedText = ({ children, ...props }) => {
     const { t } = useTranslation();
 
     return (
-        <Text>{t(`${children}`)}</Text>
-    )
+        <Text {...props}>{t(children)}</Text>
+    );
 }
 
-export default TranslatedText
-
-const styles = StyleSheet.create({})
+export default TranslatedText;

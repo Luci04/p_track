@@ -9,6 +9,7 @@ import Share from 'react-native-share';
 import { ShareInfo } from '../utility/helperFunction'
 import notifee, { TriggerType } from '@notifee/react-native'
 import { useNavigation } from '@react-navigation/native'
+import TranslatedText from '../components/TranslatedText/TranslatedText'
 
 
 const Header = () => {
@@ -24,7 +25,7 @@ const RenderItem = ({ item, index }) => {
     return <View>
         <View style={{ ...styles.titleContainer, paddingVertical: index != 0 ? 20 : 0 }}>
             <IconComponent iconName={item.iconName} iconType={item.iconCommunity} color={colors.primary} size={15} />
-            <Text style={styles.title}>{item.title}</Text>
+            <TranslatedText style={styles.title}>{item.title}</TranslatedText>
         </View>
         <View>
             {
@@ -36,7 +37,7 @@ const RenderItem = ({ item, index }) => {
                             })
                         }} >
                             <View style={styles.optionContainer}>
-                                <Text style={styles.optionTitle}>{ele.title}</Text>
+                                <TranslatedText style={styles.optionTitle}>{ele.title}</TranslatedText>
                                 <IconComponent iconName={'right'} iconType={'AntDesign'} color={colors.primaryLight} size={12} />
                             </View>
                         </TouchableOpacity>

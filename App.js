@@ -16,6 +16,8 @@ import moment from 'moment';
 import notifee, { EventType } from '@notifee/react-native';
 import MainNavigator from './navigations/MainNavigator';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { I18nextProvider } from 'react-i18next';
+import i18n from './languageService/i18next';
 
 export default function App() {
 
@@ -37,7 +39,9 @@ export default function App() {
       <NavigationContainer>
         <PaperProvider>
           <UserProvider>
-            <MainNavigator />
+            <I18nextProvider i18n={i18n}>
+              <MainNavigator />
+            </I18nextProvider>
           </UserProvider>
         </PaperProvider>
       </NavigationContainer>

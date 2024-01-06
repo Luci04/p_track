@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import LottieView from 'lottie-react-native';
 import { colors } from '../../theme/styles';
 import Loader from '../Loader/Loader';
+import TranslatedText from '../TranslatedText/TranslatedText';
 
 const OnBoardingItem = ({ item }) => {
 
@@ -10,7 +11,7 @@ const OnBoardingItem = ({ item }) => {
 
     return (
         <View style={[styles.container, { width }]}>
-            <Text style={[styles.title, { marginTop: 10 }]} adjustsFontSizeToFit >{item.title}</Text>
+            <TranslatedText style={[styles.title, { marginTop: 10 }]} adjustsFontSizeToFit >{item.title}</TranslatedText>
             <LottieView
                 style={{
                     width: 350,
@@ -20,7 +21,7 @@ const OnBoardingItem = ({ item }) => {
                 source={item.src}
                 autoPlay={true}
             />
-            <Text style={styles.subtitle} adjustsFontSizeToFit >{item.subtitle}</Text>
+            <TranslatedText style={styles.subtitle} adjustsFontSizeToFit >{item.subtitle}</TranslatedText>
         </View>
     )
 }
