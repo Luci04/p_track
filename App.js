@@ -13,7 +13,7 @@ import { UserContext, UserProvider } from './context/UserContext';
 import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
 import { BackHandler } from 'react-native';
 import moment from 'moment';
-import notifee, { EventType } from '@notifee/react-native';
+import notifee, { AndroidNotificationSetting, EventType } from '@notifee/react-native';
 import MainNavigator from './navigations/MainNavigator';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { I18nextProvider } from 'react-i18next';
@@ -29,10 +29,25 @@ export default function App() {
     }
   });
 
-  // useEffect(() => {
-  //   onDisplayNotification();
-  // }, [])
+  const ForeGroundNotification = () => {
+    return notifee.onForegroundEvent(({ type, detail }) => {
+      switch (type) {
+        case EventType.DISMISSED:
+          console.log('User dismissed notification', detail.notification);
+          break;
+        case EventType.PRESS:
+          console.log('User pressed notification', detail.notification);
+          break;
+      }
+    })
+  }
 
+  useEffect(() => {
+    const unsubscribe = ForeGroundNotification();
+    return () => {
+      unsubscribe();
+    }
+  }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

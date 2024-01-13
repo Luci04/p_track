@@ -27,7 +27,7 @@ const CycleRemainder = () => {
 
         const trigger = {
             type: TriggerType.TIMESTAMP,
-            repeatType: RepeatFrequency.DAILY,
+            repeatFrequency: RepeatFrequency.HOURLY,
             timestamp: today.getTime(), // Trigger the notification at the specified time
         };
 
@@ -35,6 +35,7 @@ const CycleRemainder = () => {
 
         // Create a trigger notification
         await notifee.createTriggerNotification({
+            id: "CycleRemainderNotification",
             title: "It's Time for Your Cycle",
             body: `Don't forget to take your Cycle on time.`,
             android: {
@@ -65,8 +66,8 @@ const CycleRemainder = () => {
             console.log("Date Picker")
             showDatePicker();
         } else {
-            console.log("Notification Canclled")
-            await notifee.deleteChannel('CycleRemainderNotification');
+            console.log("Notification Cancelled")
+            await notifee.cancelAllNotifications('CycleRemainderNotification');
             await removeValue('CycleRemainderNotification');
         }
         setIsSwitchOn(data);

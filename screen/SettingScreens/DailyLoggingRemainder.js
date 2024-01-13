@@ -27,7 +27,7 @@ const DailyLoggingRemainder = () => {
 
         const trigger = {
             type: TriggerType.TIMESTAMP,
-            repeatType: RepeatFrequency.DAILY,
+            repeatFrequency: RepeatFrequency.HOURLY,
             timestamp: today.getTime(), // Trigger the notification at the specified time
         };
 
@@ -35,6 +35,7 @@ const DailyLoggingRemainder = () => {
 
         // Create a trigger notification
         await notifee.createTriggerNotification({
+            id: 'DailyLoggingRemainderNotification',
             title: "It's Time for Your Logging",
             body: `Don't forget to take your Logging on time.`,
             android: {
@@ -65,8 +66,8 @@ const DailyLoggingRemainder = () => {
             console.log("Date Picker")
             showDatePicker();
         } else {
-            console.log("Notification Canclled")
-            await notifee.deleteChannel('DailyLoggingRemainderNotification');
+            console.log("Notification Cancelled")
+            await notifee.cancelAllNotifications('DailyLoggingRemainderNotification');
             await removeValue('DailyLoggingRemainderNotification');
         }
         setIsSwitchOn(data);

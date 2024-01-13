@@ -205,7 +205,6 @@ const ScollableInfiniteCalendar = () => {
                         const UniquesDates = new Set([...selectedDates, ...dateArray]);
 
                         setSelectedDates(Array.from(UniquesDates));
-                        // console.log([...selectedDates, ...dateArray]);
                     }
                 }}
                 pastScrollRange={3}

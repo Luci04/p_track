@@ -27,7 +27,7 @@ const TrackingRemainder = () => {
 
         const trigger = {
             type: TriggerType.TIMESTAMP,
-            repeatType: RepeatFrequency.DAILY,
+            repeatFrequency: RepeatFrequency.HOURLY,
             timestamp: today.getTime(), // Trigger the notification at the specified time
         };
 
@@ -35,6 +35,7 @@ const TrackingRemainder = () => {
 
         // Create a trigger notification
         await notifee.createTriggerNotification({
+            id: 'TrackingRemainderNotification',
             title: "It's Time for Your Tracking",
             body: `Don't forget to take your Tacking on time.`,
             android: {
@@ -65,8 +66,8 @@ const TrackingRemainder = () => {
             console.log("Date Picker")
             showDatePicker();
         } else {
-            console.log("Notification Canclled")
-            await notifee.deleteChannel('TrackingRemainderNotification');
+            console.log("Notification Cancelled")
+            await notifee.cancelAllNotifications('TrackingRemainderNotification');
             await removeValue('TrackingRemainderNotification');
         }
         setIsSwitchOn(data);

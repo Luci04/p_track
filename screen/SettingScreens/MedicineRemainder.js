@@ -27,7 +27,7 @@ const MedicineRemainder = () => {
 
         const trigger = {
             type: TriggerType.TIMESTAMP,
-            repeatType: RepeatFrequency.DAILY,
+            repeatFrequency: RepeatFrequency.HOURLY,
             timestamp: today.getTime(), // Trigger the notification at the specified time
         };
 
@@ -35,6 +35,7 @@ const MedicineRemainder = () => {
 
         // Create a trigger notification
         await notifee.createTriggerNotification({
+            id: 'MedicineRemainderNotification',
             title: "It's Time for Your Medicine",
             body: `Don't forget to take your medication on time.`,
             android: {
@@ -66,7 +67,7 @@ const MedicineRemainder = () => {
             showDatePicker();
         } else {
             console.log("Notification Cancelled")
-            await notifee.deleteChannel('MedicineRemainderNotification');
+            await notifee.cancelAllNotifications('MedicineRemainderNotification');
             await removeValue('MedicineRemainderNotification');
         }
         setIsSwitchOn(data);
