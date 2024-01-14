@@ -67,7 +67,7 @@ const CycleRemainder = () => {
             showDatePicker();
         } else {
             console.log("Notification Cancelled")
-            await notifee.cancelAllNotifications('CycleRemainderNotification');
+            await notifee.cancelAllNotifications(['CycleRemainderNotification']);
             await removeValue('CycleRemainderNotification');
         }
         setIsSwitchOn(data);

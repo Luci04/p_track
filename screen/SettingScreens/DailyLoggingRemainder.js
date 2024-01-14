@@ -17,13 +17,13 @@ const DailyLoggingRemainder = () => {
         const date = new Date();
         const today = new Date();
 
+        today.setHours(Number(time[0]));
+        today.setMinutes(Number(time[1]));
+
         if (date >= today) {
             // If it's already past the specified time today, set it for tomorrow
             today.setDate(today.getDate() + 1);
         }
-
-        today.setHours(Number(time[0]));
-        today.setMinutes(Number(time[1]));
 
         const trigger = {
             type: TriggerType.TIMESTAMP,
@@ -67,7 +67,7 @@ const DailyLoggingRemainder = () => {
             showDatePicker();
         } else {
             console.log("Notification Cancelled")
-            await notifee.cancelAllNotifications('DailyLoggingRemainderNotification');
+            await notifee.cancelAllNotifications(['DailyLoggingRemainderNotification']);
             await removeValue('DailyLoggingRemainderNotification');
         }
         setIsSwitchOn(data);

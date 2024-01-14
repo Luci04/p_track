@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Divider, Switch } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -6,6 +6,7 @@ import moment from 'moment';
 import { getDataItem, removeValue, storeDataItem } from '../../utility/storage';
 import notifee, { TimestampTrigger, TriggerType, RepeatFrequency } from '@notifee/react-native';
 import { colors } from '../../theme/styles';
+import SafeView from '../../components/SafeView/SafeView';
 
 const TrackingRemainder = () => {
 
@@ -17,13 +18,13 @@ const TrackingRemainder = () => {
         const date = new Date();
         const today = new Date();
 
+        today.setHours(Number(time[0]));
+        today.setMinutes(Number(time[1]));
+
         if (date >= today) {
             // If it's already past the specified time today, set it for tomorrow
             today.setDate(today.getDate() + 1);
         }
-
-        today.setHours(Number(time[0]));
-        today.setMinutes(Number(time[1]));
 
         const trigger = {
             type: TriggerType.TIMESTAMP,
@@ -67,7 +68,7 @@ const TrackingRemainder = () => {
             showDatePicker();
         } else {
             console.log("Notification Cancelled")
-            await notifee.cancelAllNotifications('TrackingRemainderNotification');
+            await notifee.cancelAllNotifications(['TrackingRemainderNotification']);
             await removeValue('TrackingRemainderNotification');
         }
         setIsSwitchOn(data);
@@ -106,14 +107,15 @@ const TrackingRemainder = () => {
         getvar();
     }, [selectedTime])
 
-    return (
+    return (<SafeView>
         <View style={styles.containerStyle}>
-            <View style={styles.optionContainer}>
+            <View style={{ ...styles.optionContainer, width: Dimensions.get('window').width }}>
                 <View style={styles.rowContainer}>
-                    <Text style={styles.optionTitle}>Tracking Reminder</Text>
-                    <Text style={styles.optionSubtitle}>Stay On Course, Achieve Your Goals with Precision</Text>
+                    <Text style={styles.optionTitle}>Tracking Reminder
+                        <Text style={styles.optionSubtitle}>{'\n'} Achieve Your Goals with Precision</Text>
+                    </Text>
                 </View>
-                <Switch thumbColor={colors.primary} color={colors.primaryLight} value={isSwitchOn} onValueChange={onToggleSwitch} />
+                <Switch style={{ flex: 1, maxWidth: 36 }} thumbColor={colors.primary} color={colors.primaryLight} value={isSwitchOn} onValueChange={onToggleSwitch} />
             </View>
             <Divider style={{ backgroundColor: colors.darkGrey, height: 0.5 }} />
 
@@ -137,6 +139,7 @@ const TrackingRemainder = () => {
                 onCancel={hideDatePicker}
             />
         </View>
+    </SafeView>
     )
 }
 
@@ -160,7 +163,7 @@ const styles = StyleSheet.create({
     optionSubtitle: {
         fontSize: 14,
         color: colors.darkGrey,
-        fontFamily: 'Inter-Regular',
+        fontFamily: 'Inter-Regular'
     }
 
 })

@@ -17,13 +17,13 @@ const MedicineRemainder = () => {
         const date = new Date();
         const today = new Date();
 
+        today.setHours(Number(time[0]));
+        today.setMinutes(Number(time[1]));
+
         if (date >= today) {
             // If it's already past the specified time today, set it for tomorrow
             today.setDate(today.getDate() + 1);
         }
-
-        today.setHours(Number(time[0]));
-        today.setMinutes(Number(time[1]));
 
         const trigger = {
             type: TriggerType.TIMESTAMP,
@@ -34,7 +34,7 @@ const MedicineRemainder = () => {
         console.log(today.getTime());
 
         // Create a trigger notification
-        await notifee.createTriggerNotification({
+        const itempd = await notifee.createTriggerNotification({
             id: 'MedicineRemainderNotification',
             title: "It's Time for Your Medicine",
             body: `Don't forget to take your medication on time.`,
@@ -67,7 +67,7 @@ const MedicineRemainder = () => {
             showDatePicker();
         } else {
             console.log("Notification Cancelled")
-            await notifee.cancelAllNotifications('MedicineRemainderNotification');
+            await notifee.cancelAllNotifications(['MedicineRemainderNotification']);
             await removeValue('MedicineRemainderNotification');
         }
         setIsSwitchOn(data);
